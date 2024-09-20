@@ -32,6 +32,28 @@ In this section, we will go over the block diagram and modular design of the car
 - 1 x [Raspberry Pi Pico W](https://www.raspberrypi.com/products/raspberry-pi-pico/)
 
 ### Project Structure (TBA)
-The program entrypoint for this project resides in the `main.c` file. References are made by this program to functions and structs stored in the individual components' driver code via libraries enabled by these codes' `CMakeLists.txt` file.
+The pentrypoint for this project resides in the `main.c` file. References are made by this program to functions and structs stored in the individual components' driver code via libraries enabled by these codes' `CMakeLists.txt` file.
+
+```
+docs/ (documentation images)
+
+encoder/ (driver code for wheel encoders)
+
+irline/ (driver code for barcode decoding and wall detection)
+
+magnetometer/ (driver code for magnetometer and orientation)
+
+main/ (main program code)
+
+motor/ (driver code for the motors and PID controller)
+
+nav/ (code for navigation algorithms to traverse the map within the shortest amount of time)
+
+ultrasonic/ (code for ultrasonic sensor obstacle detection)
+
+wifi/ (code for SSI and CGI and web server)
+
+README.md (this file)
+```
 
 ### Getting Started (TBA)
