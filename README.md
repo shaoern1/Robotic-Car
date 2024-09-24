@@ -1,7 +1,7 @@
 # Robotic-Car
 ## Embedded Systems P3G Robot Car
 
-### Members and Task Allocations (TBAa)
+### Members and Task Allocations (TBA)
 **Team Members** <br>
 MUHAMMAD AZREEN BIN MUHAMMAD <br>
 CHNG SONG HENG ALOYSIUS <br>
