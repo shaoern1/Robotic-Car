@@ -137,7 +137,7 @@ void send_data(char direction[10], int speed) {
     }
 
     char msg[50];
-    snprintf(msg, sizeof(msg), "Direction: %s, Speed: %d\n", direction, speed);
+    snprintf(msg, sizeof(msg), "{\"Direction\": \"%s\", \"Speed\": %d}", direction, speed);
 
     if (tcp_write(connection_pcb, msg, strlen(msg), TCP_WRITE_FLAG_COPY) != ERR_OK) {
         printf("Client: Error sending data.\n");
@@ -147,8 +147,8 @@ void send_data(char direction[10], int speed) {
     }
 }
 
-void print_direction(float ax_g, float ay_g, float pitch, float roll) {
-    // Print direction based on g-forces
+void get_direction(float ax_g, float ay_g, float pitch, float roll) {
+
     char direction[10];
     int pitch_int = (int) pitch;
     int roll_int = (int) roll;
@@ -160,9 +160,7 @@ void print_direction(float ax_g, float ay_g, float pitch, float roll) {
         // printf("Backward at %d speed", abs(pitch_int));
         strcpy(direction, "Backward");
         send_data(direction, abs(pitch_int));
-    }
-
-    if (ay_g < -TILT_THRESHOLD) {
+    } else if (ay_g < -TILT_THRESHOLD) {
         // printf("Left at %d speed", abs(roll_int));
         strcpy(direction, "Left");
         send_data(direction, abs(roll_int));
@@ -185,7 +183,7 @@ void print_direction(float ax_g, float ay_g, float pitch, float roll) {
 
 void accelerometer_task(__unused void *params) {
 
- // Initialize I2C
+    // Initialize I2C
     i2c_init(I2C_PORT, 400 * 1000);
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
@@ -206,32 +204,10 @@ void accelerometer_task(__unused void *params) {
         // Calculate tilt angles
         calculate_tilt_angles(ax_g, ay_g, az_g, &pitch, &roll);
         
-        // Print values and direction
-        // printf("G-forces - X: %.2f g, Y: %.2f g, Z: %.2f g\n", ax_g, ay_g, az_g);
-        // printf("Angles - Pitch: %.1f°, Roll: %.1f°\n", pitch, roll);
-        // printf("Direction: ");
-        print_direction(ax_g, ay_g, pitch, roll);
-        // printf("\n");
+        get_direction(ax_g, ay_g, pitch, roll);
         
         sleep_ms(SAMPLE_RATE);
     }
-
-
-    // while (1) {
-    //     vTaskDelay(500);
-    //     char msg[50];
-    //     acc_read_raw(&ax, &ay, &az);
-    //     snprintf(msg, sizeof(msg), "Accelerometer Raw Data - X: %d, Y: %d, Z: %d\n", ax, ay, az);
-    //     printf("Accelerometer Raw Data - X: %d, Y: %d, Z: %d\n", ax, ay, az);
-
-
-    //     if (tcp_write(connection_pcb, msg, strlen(msg), TCP_WRITE_FLAG_COPY) != ERR_OK) {
-    //         printf("\nClient: Error sending magnetometer data.\n");
-    //     } else {
-    //         tcp_output(connection_pcb);
-    //         printf("\nClient: Sent data: %s\n", msg);
-    //     }
-    // }
 }
 
 

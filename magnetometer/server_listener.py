@@ -1,4 +1,5 @@
 import socket
+import json
 
 # Define the server address and port
 HOST = '0.0.0.0'  # Listen on all available network interfaces
@@ -21,12 +22,20 @@ try:
             data = client_socket.recv(1024).decode('utf-8')
             if not data:
                 break
-            print(f"Received from client: {data}")
+            try:
+                payload = json.loads(data)
+                direction = payload.get('Direction')
+                speed = payload.get('Speed')
+                print(f"Received from client: {direction} at speed {speed}")
+            except json.JSONDecodeError:
+                print("Received invalid JSON data")
         
         # Close the client connection
         client_socket.close()
         print(f"Connection with {client_address} closed")
+
 except KeyboardInterrupt:
     print("\nServer shutting down.")
+    
 finally:
     server_socket.close()
