@@ -8,7 +8,7 @@ target_include_directories(main PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/..
         ${CMAKE_CURRENT_LIST_DIR}/../barcode
-        #${CMAKE_CURRENT_LIST_DIR}/../motor
+        ${CMAKE_CURRENT_LIST_DIR}/../motor
     
         )
 
@@ -22,7 +22,7 @@ target_link_libraries(main
         #pico_lwip_http
         pico_stdlib
         hardware_adc
-        #motor_lib
+        motor_lib
         barcode_lib
         )
 

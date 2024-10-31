@@ -59,6 +59,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/motor/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/cmake_install.cmake")
 endif()
 

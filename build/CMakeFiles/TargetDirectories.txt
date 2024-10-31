@@ -215,6 +215,9 @@ C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/docs/CMakeFi
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/CMakeFiles/main.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/CMakeFiles/rebuild_cache.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/motor/CMakeFiles/motor_lib.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/motor/CMakeFiles/edit_cache.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/motor/CMakeFiles/rebuild_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/CMakeFiles/barcode_lib.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/CMakeFiles/rebuild_cache.dir

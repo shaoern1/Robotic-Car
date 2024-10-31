@@ -7,7 +7,7 @@
 //#include "pico/cyw43_arch.h"
 #include "hardware/adc.h"
 #include "barcode.h"
-//#include "motor.h"
+#include "motor.h"
 
 // Function to init all sensors and motors
 void initAll()
@@ -20,6 +20,7 @@ void initAll()
     init_barcode();
     printf("1/9 - Barcode sensor pin initialised\n");
     sleep_ms(500);
+    init_motor();
 }
 
 int main()
@@ -27,7 +28,7 @@ int main()
     stdio_init_all();
     // Init all required
     initAll();
-
+    move_fwd();
     // Main loop
     while (1)
     {

@@ -18,7 +18,7 @@ pico_sdk_init()
 
 if (NOT PICO_NO_HARDWARE)
     add_subdirectory(main)
-    #add_subdirectory(motor)
+    add_subdirectory(motor)
     add_subdirectory(barcode)
 
 endif ()
