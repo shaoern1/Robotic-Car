@@ -4,9 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include "pico/stdlib.h"
-//#include "pico/cyw43_arch.h"
+#include "pico/cyw43_arch.h"
 #include "hardware/adc.h"
 #include "barcode.h"
+#include "motor.h"
 
 
 // Function to init all sensors and motors
@@ -16,14 +17,13 @@ void initAll()
     stdio_init_all();
     sleep_ms(1000);
 
+    cyw43_arch_init();
+    cyw43_arch_enable_sta_mode();
+    sleep_ms(1000);
 
 
     // Initialise barcode sensor pin
     init_barcode();
-    while (1)
-    {
-        track_bars();
-    }
     printf("1/9 - Barcode sensor pin initialised\n");
     sleep_ms(500);
 
