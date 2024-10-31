@@ -21,5 +21,5 @@ void init_gpio();
 void reset_message();
 void add_to_message(char decoded_char);
 void track_bars();
-
+void init_barcode();
 #endif // barcode.h

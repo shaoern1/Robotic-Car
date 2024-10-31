@@ -7,12 +7,8 @@ add_executable(main
 target_include_directories(main PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/..
-        ${CMAKE_CURRENT_LIST_DIR}/../ultrasonic
-        ${CMAKE_CURRENT_LIST_DIR}/../motor
-        ${CMAKE_CURRENT_LIST_DIR}/../encoder
-        ${CMAKE_CURRENT_LIST_DIR}/../wifi
-        ${CMAKE_CURRENT_LIST_DIR}/../irline/
-        ${CMAKE_CURRENT_LIST_DIR}/../magnetometer
+        ${CMAKE_CURRENT_LIST_DIR}/../barcode
+
         )
 
 target_compile_definitions(main PRIVATE
@@ -21,10 +17,10 @@ target_compile_definitions(main PRIVATE
 
 # pull in common dependencies
 target_link_libraries(main 
-        pico_cyw43_arch_lwip_threadsafe_background
-        pico_lwip_http
+        #pico_cyw43_arch_lwip_threadsafe_background
+        #pico_lwip_http
         hardware_adc
-        motor_lib
+
         barcode_lib
         )
 
