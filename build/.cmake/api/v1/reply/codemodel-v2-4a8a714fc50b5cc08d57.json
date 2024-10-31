@@ -13,7 +13,8 @@
 						3,
 						101,
 						102,
-						103
+						103,
+						104
 					],
 					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
@@ -811,8 +812,8 @@
 					"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/tinyusb",
 					"targetIndexes" : 
 					[
-						13,
-						14
+						14,
+						15
 					]
 				},
 				{
@@ -1088,7 +1089,7 @@
 					"source" : "C:/Users/azree/Documents/Pico-v1.5.1/pico-extras/src/common/pico_scanvideo",
 					"targetIndexes" : 
 					[
-						11
+						12
 					]
 				},
 				{
@@ -1182,7 +1183,7 @@
 					"source" : "C:/Users/azree/Documents/Pico-v1.5.1/pico-extras/src/rp2_common/pico_audio_i2s",
 					"targetIndexes" : 
 					[
-						7
+						8
 					]
 				},
 				{
@@ -1197,7 +1198,7 @@
 					"source" : "C:/Users/azree/Documents/Pico-v1.5.1/pico-extras/src/rp2_common/pico_audio_pwm",
 					"targetIndexes" : 
 					[
-						8
+						9
 					]
 				},
 				{
@@ -1212,7 +1213,7 @@
 					"source" : "C:/Users/azree/Documents/Pico-v1.5.1/pico-extras/src/rp2_common/pico_audio_spdif",
 					"targetIndexes" : 
 					[
-						9
+						10
 					]
 				},
 				{
@@ -1227,7 +1228,7 @@
 					"source" : "C:/Users/azree/Documents/Pico-v1.5.1/pico-extras/src/rp2_common/pico_sd_card",
 					"targetIndexes" : 
 					[
-						12
+						13
 					]
 				},
 				{
@@ -1242,7 +1243,7 @@
 					"source" : "C:/Users/azree/Documents/Pico-v1.5.1/pico-extras/src/rp2_common/pico_scanvideo_dpi",
 					"targetIndexes" : 
 					[
-						10
+						11
 					]
 				},
 				{
@@ -1301,7 +1302,7 @@
 					"source" : "main",
 					"targetIndexes" : 
 					[
-						5
+						6
 					]
 				},
 				{
@@ -1316,7 +1317,7 @@
 					"source" : "motor",
 					"targetIndexes" : 
 					[
-						6
+						7
 					]
 				},
 				{
@@ -1332,6 +1333,21 @@
 					"targetIndexes" : 
 					[
 						0
+					]
+				},
+				{
+					"build" : "encoder",
+					"jsonFile" : "directory-encoder-Debug-eddea63f02aeffc9299f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "encoder",
+					"targetIndexes" : 
+					[
+						5
 					]
 				}
 			],
@@ -1350,14 +1366,16 @@
 						0,
 						101,
 						102,
-						103
+						103,
+						104
 					],
 					"name" : "RobotCar",
 					"targetIndexes" : 
 					[
 						0,
 						5,
-						6
+						6,
+						7
 					]
 				},
 				{
@@ -1486,14 +1504,14 @@
 						2,
 						3,
 						4,
-						7,
 						8,
 						9,
 						10,
 						11,
 						12,
 						13,
-						14
+						14,
+						15
 					]
 				}
 			],
@@ -1535,9 +1553,16 @@
 					"projectIndex" : 3
 				},
 				{
+					"directoryIndex" : 104,
+					"id" : "encoder_lib::@372742a3ab0a8675e45e",
+					"jsonFile" : "target-encoder_lib-Debug-e06e82264bfe5e3897ec.json",
+					"name" : "encoder_lib",
+					"projectIndex" : 0
+				},
+				{
 					"directoryIndex" : 101,
 					"id" : "main::@15c4a824ab2728a3f5e7",
-					"jsonFile" : "target-main-Debug-71ddd897d024acd3d714.json",
+					"jsonFile" : "target-main-Debug-14f0e699023bccaac35d.json",
 					"name" : "main",
 					"projectIndex" : 0
 				},

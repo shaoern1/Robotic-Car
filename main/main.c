@@ -8,6 +8,7 @@
 #include "hardware/adc.h"
 #include "barcode.h"
 #include "motor.h"
+#include "encoder.h"
 // Define the button pin
 #define BUTTON_PIN 21
 // Function to init all sensors and motors

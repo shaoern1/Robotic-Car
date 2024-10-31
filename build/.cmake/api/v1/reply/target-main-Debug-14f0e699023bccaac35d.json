@@ -71,7 +71,7 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 30,
+				"line" : 31,
 				"parent" : 0
 			},
 			{
@@ -306,6 +306,10 @@
 					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/main/../motor"
 				},
 				{
+					"backtrace" : 10,
+					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/main/../encoder"
+				},
+				{
 					"backtrace" : 2,
 					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_stdlib/include"
 				},
@@ -500,6 +504,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/barcode"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/encoder"
 				}
 			],
 			"language" : "C",
@@ -787,6 +795,10 @@
 					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/main/../motor"
 				},
 				{
+					"backtrace" : 10,
+					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/main/../encoder"
+				},
+				{
 					"backtrace" : 2,
 					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_stdlib/include"
 				},
@@ -981,6 +993,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/barcode"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/encoder"
 				}
 			],
 			"language" : "ASM",
@@ -1231,6 +1247,10 @@
 					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/main/../motor"
 				},
 				{
+					"backtrace" : 10,
+					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/main/../encoder"
+				},
+				{
 					"backtrace" : 2,
 					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_stdlib/include"
 				},
@@ -1425,6 +1445,10 @@
 				{
 					"backtrace" : 2,
 					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/barcode"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/encoder"
 				}
 			],
 			"language" : "CXX",
@@ -1455,6 +1479,10 @@
 		{
 			"backtrace" : 2,
 			"id" : "barcode_lib::@9456b3d03f948601934f"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "encoder_lib::@372742a3ab0a8675e45e"
 		}
 	],
 	"id" : "main::@15c4a824ab2728a3f5e7",
@@ -2293,6 +2321,16 @@
 			{
 				"backtrace" : 2,
 				"fragment" : "barcode\\libbarcode_lib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "encoder\\libencoder_lib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "motor\\libmotor_lib.a",
 				"role" : "libraries"
 			},
 			{

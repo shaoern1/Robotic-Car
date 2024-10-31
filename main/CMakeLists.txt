@@ -9,7 +9,7 @@ target_include_directories(main PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/..
         ${CMAKE_CURRENT_LIST_DIR}/../barcode
         ${CMAKE_CURRENT_LIST_DIR}/../motor
-    
+        ${CMAKE_CURRENT_LIST_DIR}/../encoder
         )
 
 target_compile_definitions(main PRIVATE
@@ -24,6 +24,7 @@ target_link_libraries(main
         hardware_adc
         motor_lib
         barcode_lib
+        encoder_lib
         )
 
 # create map/bin/hex file etc.

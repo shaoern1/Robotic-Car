@@ -1379,9 +1379,9 @@ Discarded input sections
  .text          0x00000000        0x0 barcode/libbarcode_lib.a(barcode.c.obj)
  .data          0x00000000        0x0 barcode/libbarcode_lib.a(barcode.c.obj)
  .bss           0x00000000        0x0 barcode/libbarcode_lib.a(barcode.c.obj)
- .text          0x00000000        0x0 C:\Users\azree\AppData\Local\Temp\cc2s7LJF.o
- .data          0x00000000        0x0 C:\Users\azree\AppData\Local\Temp\cc2s7LJF.o
- .bss           0x00000000        0x0 C:\Users\azree\AppData\Local\Temp\cc2s7LJF.o
+ .text          0x00000000        0x0 C:\Users\azree\AppData\Local\Temp\ccQsEPdv.o
+ .data          0x00000000        0x0 C:\Users\azree\AppData\Local\Temp\ccQsEPdv.o
+ .bss           0x00000000        0x0 C:\Users\azree\AppData\Local\Temp\ccQsEPdv.o
  .data          0x00000000        0x0 c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .bss           0x00000000        0x0 c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .text          0x00000000        0x0 c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libg.a(lib_a-calloc.o)
@@ -1599,7 +1599,7 @@ LOAD c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.
 .boot2          0x10000000      0x100
                 0x10000000                __boot2_start__ = .
  *(.boot2)
- .boot2         0x10000000      0x100 C:\Users\azree\AppData\Local\Temp\cc2s7LJF.o
+ .boot2         0x10000000      0x100 C:\Users\azree\AppData\Local\Temp\ccQsEPdv.o
                 0x10000100                __boot2_end__ = .
                 0x00000001                ASSERT (((__boot2_end__ - __boot2_start__) == 0x100), ERROR: Pico second stage bootloader must be 256 bytes in size)
 
@@ -3223,7 +3223,9 @@ LOAD main/CMakeFiles/main.dir/C_/Program_Files/Raspberry_Pi/Pico_SDK_v1.5.1/pico
 LOAD main/CMakeFiles/main.dir/C_/Program_Files/Raspberry_Pi/Pico_SDK_v1.5.1/pico-sdk/src/rp2_common/hardware_adc/adc.c.obj
 LOAD motor/libmotor_lib.a
 LOAD barcode/libbarcode_lib.a
-LOAD C:\Users\azree\AppData\Local\Temp\cc2s7LJF.o
+LOAD encoder/libencoder_lib.a
+LOAD motor/libmotor_lib.a
+LOAD C:\Users\azree\AppData\Local\Temp\ccQsEPdv.o
 LOAD c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a
 LOAD c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libm.a
 START GROUP
@@ -3340,7 +3342,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x000007ac       0x2c barcode/libbarcode_lib.a(barcode.c.obj)
  .ARM.attributes
-                0x000007d8       0x22 C:\Users\azree\AppData\Local\Temp\cc2s7LJF.o
+                0x000007d8       0x22 C:\Users\azree\AppData\Local\Temp\ccQsEPdv.o
  .ARM.attributes
                 0x000007fa       0x1e c:/progra~1/raspbe~1/picosd~1.1/gcc-ar~1/bin/../lib/gcc/arm-none-eabi/10.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .ARM.attributes

@@ -221,3 +221,6 @@ C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/motor/CMakeFiles/rebu
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/CMakeFiles/barcode_lib.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/CMakeFiles/rebuild_cache.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/encoder/CMakeFiles/encoder_lib.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/encoder/CMakeFiles/edit_cache.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/encoder/CMakeFiles/rebuild_cache.dir

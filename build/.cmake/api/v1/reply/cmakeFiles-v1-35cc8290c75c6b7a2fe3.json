@@ -1022,6 +1022,9 @@
 		},
 		{
 			"path" : "barcode/CMakeLists.txt"
+		},
+		{
+			"path" : "encoder/CMakeLists.txt"
 		}
 	],
 	"kind" : "cmakeFiles",
