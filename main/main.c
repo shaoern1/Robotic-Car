@@ -8,7 +8,8 @@
 #include "hardware/adc.h"
 #include "barcode.h"
 #include "motor.h"
-
+// Define the button pin
+#define BUTTON_PIN 21
 // Function to init all sensors and motors
 void initAll()
 {
@@ -28,24 +29,25 @@ int main()
     stdio_init_all();
     // Init all required
     initAll();
-    move_fwd();
+    // use the toggle motor function to test the motor
+    toggle_motor();
+    
+    lean_left();
     // Main loop
     while (1)
     {
-        // Print message to serial monitor
-        printf("Scanning...GAY\n");
-        fflush(stdout);  // Flush the output buffer to ensure the message is sent
-        // Debugging print to ensure loop is running
-        printf("Entering track_bars function\n");
-        fflush(stdout);  // Flush the output buffer to ensure the message is sent
-        // Call the function to track bars
-        track_bars();
-        // Debugging print to ensure function call is complete
-        printf("Exiting track_bars function\n");
-        fflush(stdout);  // Flush the output buffer to ensure the message is sent
-        // Add a delay to avoid flooding the serial monitor
-        sleep_ms(1000);
-    }
+       
 
+        // Add a small delay to debounce the button
+        sleep_ms(50);
+
+        track_bars();
+
+    }
+   
+    if (gpio_get(BUTTON_PIN) == 0)
+    {
+        stop();
+    }
     return 0;
 }

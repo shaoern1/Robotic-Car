@@ -58,4 +58,7 @@ void move_fwd();
 void move_bwd();
 void stop();
 
+// Toggle motor
+void toggle_motor();
+void toggle_motor_off();
 #endif // MOTOR_H
