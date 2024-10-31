@@ -16,7 +16,7 @@
 
 extern char decoded_message[MAX_MESSAGE_LENGTH];
 extern int message_length;
-
+void init_barcode();
 void init_gpio();
 void reset_message();
 void add_to_message(char decoded_char);

@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.25)
 # Pull in SDK (must be before project)
 include(pico_sdk_import.cmake)
 include(pico_extras_import_optional.cmake)
@@ -17,7 +18,7 @@ pico_sdk_init()
 
 if (NOT PICO_NO_HARDWARE)
     add_subdirectory(main)
-    add_subdirectory(motor)
+    #add_subdirectory(motor)
     add_subdirectory(barcode)
 
 endif ()
