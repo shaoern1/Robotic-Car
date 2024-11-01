@@ -25,6 +25,7 @@ target_link_libraries(main
         motor_lib
         barcode_lib
         encoder_lib
+       
         )
 
 # create map/bin/hex file etc.
