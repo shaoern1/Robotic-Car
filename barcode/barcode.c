@@ -6,7 +6,14 @@
 #include "hardware/gpio.h"
 #include "barcode.h"
 
+// Define states for the state machine
+typedef enum {
+    BARCODE_IDLE,
+    BARCODE_READING,
+    BARCODE_COMPLETE
+} barcode_state_t;
 
+static barcode_state_t barcode_state = BARCODE_IDLE;
 
 typedef struct {
     float width;
@@ -14,7 +21,7 @@ typedef struct {
 } BarInfo;
 
 typedef struct {
-    const char* pattern;
+    char pattern[BARS_PER_CHAR + 1];
     char character;
 } Code39Mapping;
 
@@ -58,15 +65,17 @@ const Code39Mapping CODE39_DICT[] = {
     {"010000101", '-'},
     {"110000100", '.'},
     {"011000100", ' '},
-    {"010101000", '*'}  // Start/Stop character
+    {"010101000", '$'},
+    {"010100010", '/'},
+    {"010001010", '+'},
+    {"000101010", '%'}
 };
 
 char decoded_message[MAX_MESSAGE_LENGTH];
 int message_length = 0;
+
 void init_barcode() {
-    init_gpio();
-}
-void init_gpio() {
+    // Initialize GPIO for IR sensor
     gpio_init(IR_SENSOR_PIN);
     gpio_set_dir(IR_SENSOR_PIN, GPIO_IN);
     gpio_init(RESET_BUTTON_PIN);
@@ -206,13 +215,18 @@ void track_bars() {
     bool skip_next_white = false;  // Flag to skip the next white bar after character detection
 
     printf("Starting bar tracking...\n");
+    fflush(stdout);  // Flush the output buffer to ensure the message is sent
     printf("Move barcode past sensor...\n");
+    fflush(stdout);  // Flush the output buffer to ensure the message is sent
     printf("Press reset button (GP20) to reset counters\n\n");
+    fflush(stdout);  // Flush the output buffer to ensure the message is sent
 
     while (true) {
         if (gpio_get(RESET_BUTTON_PIN) == 0) {
             printf("\n=== RESET TRIGGERED ===\n");
+            fflush(stdout);  // Flush the output buffer to ensure the message is sent
             printf("Resetting bar counter and character counter\n\n");
+            fflush(stdout);  // Flush the output buffer to ensure the message is sent
             bar_count = 0;
             character_count = 0;
             collecting_extra = false;
@@ -284,7 +298,7 @@ void track_bars() {
             current_state = new_state;
         }
 
-        sleep_ms(1);
+        sleep_ms(100);
     }
 }
 

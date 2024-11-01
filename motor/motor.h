@@ -61,4 +61,6 @@ void stop();
 // Toggle motor
 void toggle_motor();
 void toggle_motor_off();
+void init_toggle_motor();
+void init_toggle_motor_off();
 #endif // MOTOR_H

@@ -6,6 +6,9 @@
 #include "motor.h"
 #include "math.h"
 
+// Define button pins
+#define BTN22 22
+#define BTN21 21
 
 // Define variables
 float mtr1_speed = 0.0f;
@@ -171,36 +174,39 @@ void stop() {
     set_mtr2_speed(0.0f);
 }
 
-
-// Create a function that uses gpio 22 button that can toggle the motor on and off
-void toggle_motor() {
+// Initialize button 22 for toggling motor
+void init_toggle_motor() {
     gpio_init(BTN22);
     gpio_set_dir(BTN22, GPIO_IN);
     gpio_pull_up(BTN22);
-    while (true) {
-        if (gpio_get(BTN22) == 0) {
-            printf("Button 22 pressed\n");
-            sleep_ms(1000);
-            if (mtr1_speed == 0.0f && mtr2_speed == 0.0f) {
-                set_speed_40();
-                move_fwd();
-            } else {
-                stop();
-            }
-        }
-    }
 }
-// off with button 21 regardless if the motor is on or off
-void toggle_motor_off(){
-    gpio_init(BTN21);
-    gpio_set_dir(BTN21, GPIO_IN);
-    gpio_pull_up(BTN21);
-    while (true) {
-        if (gpio_get(BTN21) == 0) {
-            printf("Button 21 pressed\n");
-            sleep_ms(1000);
+
+// Function to toggle motor on and off
+void toggle_motor() {
+    if (gpio_get(BTN22) == 0) {
+        printf("Button 22 pressed\n");
+        sleep_ms(100); // Debounce delay
+        if (mtr1_speed == 0.0f && mtr2_speed == 0.0f) {
+            set_speed_40();
+            move_fwd();
+        } else {
             stop();
         }
     }
-   
+}
+
+// Initialize button 21 for stopping motor
+void init_toggle_motor_off() {
+    gpio_init(BTN21);
+    gpio_set_dir(BTN21, GPIO_IN);
+    gpio_pull_up(BTN21);
+}
+
+// Function to stop motor with button 21
+void toggle_motor_off() {
+    if (gpio_get(BTN21) == 0) {
+        printf("Button 21 pressed\n");
+        sleep_ms(100); // Debounce delay
+        stop();
+    }
 }
