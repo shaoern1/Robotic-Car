@@ -242,7 +242,7 @@ DOXYGEN_DOT_EXECUTABLE:FILEPATH=DOXYGEN_DOT_EXECUTABLE-NOTFOUND
 DOXYGEN_EXECUTABLE:FILEPATH=DOXYGEN_EXECUTABLE-NOTFOUND
 
 //Path to the FreeRTOS_KERNEL
-FREERTOS_KERNEL_PATH:PATH=C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/FreeRTOS-Kernel-main
+FREERTOS_KERNEL_PATH:PATH=C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main
 
 //Value Computed by CMake
 FreeRTOS-Kernel_BINARY_DIR:STATIC=C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/FREERTOS_KERNEL
@@ -251,10 +251,10 @@ FreeRTOS-Kernel_BINARY_DIR:STATIC=C:/Users/azree/OneDrive/Documents/GitHub/Robot
 FreeRTOS-Kernel_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-FreeRTOS-Kernel_SOURCE_DIR:STATIC=C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040
+FreeRTOS-Kernel_SOURCE_DIR:STATIC=C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040
 
 //PICO target board (e.g. pico)
-PICO_BOARD:STRING=pico_w
+PICO_BOARD:STRING=pico
 
 //PICO board header directories
 PICO_BOARD_HEADER_DIRS:STRING=
@@ -517,7 +517,7 @@ PICO_BOOT_STAGE2_DIR:INTERNAL=C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico
 PICO_CMAKE_PRELOAD_PLATFORM_DIR:INTERNAL=C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/cmake/preload/platforms
 PICO_CMAKE_PRELOAD_PLATFORM_FILE:INTERNAL=C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/cmake/preload/platforms/rp2040.cmake
 PICO_COMPILER_ASM:INTERNAL=C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe
-PICO_DOXYGEN_EXCLUDE_PATHS:INTERNAL= C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs
+PICO_DOXYGEN_EXCLUDE_PATHS:INTERNAL= C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/cmsis C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040/hardware_regs
 PICO_DOXYGEN_PATHS:INTERNAL= C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/cyw43-driver/src C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2040
 PICO_NO_HARDWARE:INTERNAL=0
 PICO_ON_DEVICE:INTERNAL=1

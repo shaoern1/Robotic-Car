@@ -31,21 +31,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  13 .comment      00000049  00000000  00000000  00009ca8  2**0
                   CONTENTS, READONLY
- 14 .debug_info   0001662b  00000000  00000000  00009cf1  2**0
+ 14 .debug_info   00016619  00000000  00000000  00009cf1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_abbrev 0000433c  00000000  00000000  0002031c  2**0
+ 15 .debug_abbrev 00004322  00000000  00000000  0002030a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_aranges 00000dc8  00000000  00000000  00024658  2**3
+ 16 .debug_aranges 00000dc8  00000000  00000000  00024630  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_ranges 00003040  00000000  00000000  00025420  2**3
+ 17 .debug_ranges 00003040  00000000  00000000  000253f8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000ed10  00000000  00000000  00028460  2**0
+ 18 .debug_line   0000ed10  00000000  00000000  00028438  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    0000407d  00000000  00000000  00037170  2**0
+ 19 .debug_str    0000407d  00000000  00000000  00037148  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00001fbc  00000000  00000000  0003b1f0  2**2
+ 20 .debug_frame  00001fbc  00000000  00000000  0003b1c8  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_loc    0000ed52  00000000  00000000  0003d1ac  2**0
+ 21 .debug_loc    0000ed52  00000000  00000000  0003d184  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/main.elf:     file format elf32-littlearm

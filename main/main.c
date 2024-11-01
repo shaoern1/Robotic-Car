@@ -4,11 +4,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-//#include "pico/cyw43_arch.h"
-
+#include <string.h>
+#include "hardware/sync.h"
 #include "barcode.h"
-
-
+// I want to test config are properly defined and accessible
+// Check this header if the FreeRTOS is included
+//#include "FreeRTOS.h"
 // Function to init all sensors and motors
 void initAll()
 {
@@ -24,7 +25,8 @@ void initAll()
         track_bars();
     }
     printf("1/9 - Barcode sensor pin initialised\n");
-    sleep_ms(500);
+    
+    
 
 }
 
@@ -37,7 +39,8 @@ int main()
     // create an interrupt for the barcode sensor
     
 
-
+    while (1)
+        tight_loop_contents();
 
 
     return 0;

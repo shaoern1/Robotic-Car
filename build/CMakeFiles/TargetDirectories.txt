@@ -2,8 +2,6 @@ C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/CMakeFiles/edit_cache
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/CMakeFiles/rebuild_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/CMakeFiles/rebuild_cache.dir
-C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/FREERTOS_KERNEL/CMakeFiles/edit_cache.dir
-C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/FREERTOS_KERNEL/CMakeFiles/rebuild_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/CMakeFiles/rebuild_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/tools/CMakeFiles/edit_cache.dir
@@ -212,6 +210,8 @@ C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/rp2_c
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/rp2_common/usb_device_msc/CMakeFiles/rebuild_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/docs/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/docs/CMakeFiles/rebuild_cache.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/FREERTOS_KERNEL/CMakeFiles/edit_cache.dir
+C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/FREERTOS_KERNEL/CMakeFiles/rebuild_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/CMakeFiles/main.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/CMakeFiles/edit_cache.dir
 C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/CMakeFiles/rebuild_cache.dir
