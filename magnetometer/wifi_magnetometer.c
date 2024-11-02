@@ -19,6 +19,7 @@
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
 #include <math.h>
+#include <time.h>
 
 // WIFI Configuration
 
@@ -136,8 +137,15 @@ void send_data(char direction[10], int speed) {
         return;
     }
 
-    char msg[50];
-    snprintf(msg, sizeof(msg), "{\"Direction\": \"%s\", \"Speed\": %d}", direction, speed);
+    // Get the current time
+    time_t now;
+    time(&now);
+    struct tm *timeinfo = localtime(&now);
+
+    // Format the message with direction, speed, and time
+    char msg[100];
+    // snprintf(msg, sizeof(msg), "{\"Direction\": \"%s\", \"Speed\": %d, \"Time\": \"%Y-%m-%d %H:%M:%S\"}", direction, speed, timeinfo);
+    snprintf(msg, sizeof(msg), "{\"Direction\": \"%s\", \"Speed\": %d, \"Time\": \"%02d:%02d:%02d:%03d\"}", direction, speed, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec, (int)(clock() % CLOCKS_PER_SEC * 1000 / CLOCKS_PER_SEC));
 
     if (tcp_write(connection_pcb, msg, strlen(msg), TCP_WRITE_FLAG_COPY) != ERR_OK) {
         printf("Client: Error sending data.\n");
