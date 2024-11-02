@@ -104,6 +104,19 @@ void acc_init() {
     i2c_write_blocking(I2C_PORT, ACCELEROMETER_ADDR, config_data, 2, false);
 }
 
+// Function to apply a low-pass filter to accelerometer data
+void low_pass_filter(float *ax_g, float *ay_g, float *az_g, float alpha) {
+    static float prev_ax_g = 0.0f, prev_ay_g = 0.0f, prev_az_g = 0.0f;
+
+    *ax_g = alpha * (*ax_g) + (1.0f - alpha) * prev_ax_g;
+    *ay_g = alpha * (*ay_g) + (1.0f - alpha) * prev_ay_g;
+    *az_g = alpha * (*az_g) + (1.0f - alpha) * prev_az_g;
+
+    prev_ax_g = *ax_g;
+    prev_ay_g = *ay_g;
+    prev_az_g = *az_g;
+}
+
 // Function to read and convert accelerometer data to g-forces
 void acc_read_g(float *ax_g, float *ay_g, float *az_g) {
     uint8_t reg = OUT_X_L_A | 0x80;  // Auto-increment
@@ -122,14 +135,26 @@ void acc_read_g(float *ax_g, float *ay_g, float *az_g) {
     *ax_g = ax * SENSITIVITY_4G;
     *ay_g = ay * SENSITIVITY_4G;
     *az_g = az * SENSITIVITY_4G;
+
+    // Apply low-pass filter
+    low_pass_filter(ax_g, ay_g, az_g, 0.5f);  // Adjust alpha as needed
 }
 
 // Function to calculate tilt angles in degrees
 void calculate_tilt_angles(float ax_g, float ay_g, float az_g, float *pitch, float *roll) {
     // Calculate pitch (rotation around Y-axis) and roll (rotation around X-axis)
-    *pitch = atan2f(ax_g, sqrtf(ay_g * ay_g + az_g * az_g)) * 180.0f / M_PI;
+    *pitch = atan2f(ax_g, sqrtf(ay_g * ay_g + az_g * az_g)) * 180.0f / M_PI; // Ax/sqrt(Ay^2 + Az^2) -> convert to degrees
     *roll = atan2f(ay_g, sqrtf(ax_g * ax_g + az_g * az_g)) * 180.0f / M_PI;
 }
+
+typedef struct {
+    char direction[10];
+    int speed;
+    int hour;
+    int minute;
+    int second;
+    int millisecond;
+} DataPacket;
 
 void send_data(char direction[10], int speed) {
     if (connection_pcb == NULL) {
@@ -142,16 +167,21 @@ void send_data(char direction[10], int speed) {
     time(&now);
     struct tm *timeinfo = localtime(&now);
 
-    // Format the message with direction, speed, and time
-    char msg[100];
-    // snprintf(msg, sizeof(msg), "{\"Direction\": \"%s\", \"Speed\": %d, \"Time\": \"%Y-%m-%d %H:%M:%S\"}", direction, speed, timeinfo);
-    snprintf(msg, sizeof(msg), "{\"Direction\": \"%s\", \"Speed\": %d, \"Time\": \"%02d:%02d:%02d:%03d\"}", direction, speed, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec, (int)(clock() % CLOCKS_PER_SEC * 1000 / CLOCKS_PER_SEC));
+    // Create the data packet
+    DataPacket packet;
+    strcpy(packet.direction, direction);
+    packet.speed = speed;
+    packet.hour = timeinfo->tm_hour;
+    packet.minute = timeinfo->tm_min;
+    packet.second = timeinfo->tm_sec;
+    packet.millisecond = (int)(clock() % CLOCKS_PER_SEC * 1000 / CLOCKS_PER_SEC);
 
-    if (tcp_write(connection_pcb, msg, strlen(msg), TCP_WRITE_FLAG_COPY) != ERR_OK) {
+    if (tcp_write(connection_pcb, &packet, sizeof(packet), TCP_WRITE_FLAG_COPY) != ERR_OK) {
         printf("Client: Error sending data.\n");
     } else {
         tcp_output(connection_pcb);
-        printf("Client: Sent data: %s\n", msg);
+        printf("Client: Sent data: Direction=%s, Speed=%d, Time=%02d:%02d:%02d:%03d\n", 
+               packet.direction, packet.speed, packet.hour, packet.minute, packet.second, packet.millisecond);
     }
 }
 
@@ -206,7 +236,7 @@ void accelerometer_task(__unused void *params) {
     float pitch, roll;
 
     while (1) {
-        // Read accelerometer (in g-forces)
+        // Read accelerometer (in g-forces) and apply low pass filter
         acc_read_g(&ax_g, &ay_g, &az_g);
         
         // Calculate tilt angles
