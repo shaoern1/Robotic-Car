@@ -1,4 +1,17 @@
-# rp2040-freertos-template
-This is a template project for developing FreeRTOS based applications on Raspberry Pi RP2040 based boards. This template uses the "official" RP2040 port from the Raspberry Pi Foundation. My previous repo used the generic Cortex M0 port so this one corrects that. Previous Repo retained as tutorials rely on it. 
+# INF2004-Project-P3A
+**Robotic Car Project - Team P3A**
 
-Unmodified, this project will spawn a single task to rapidly blink the LED on and off.
+## Before Creating Your Own Branch
+Clone the test branch, and try to compile and run on your pico. It is a simple Blinky program using FreeRTOS.
+
+### Folder Structure
+    Main Folder/
+    ├── CMakeLists.txt      # Root CMakeLists.txt (No need to touch)
+    ├── main.c              # Main driver code goes here (Call all your functions in here)
+    ├── FreeRTOS-Kernel/    # FreeRTOS kernel directory (No need to touch)
+    ├── source/             # Source folder (Put all your codes here)
+        └── CMakeLists.txt  # Update this with whatever new .c file you added
+        └── header.h        # Update this with your function prototypes before calling in main.c
+        └── blink.c         # Simple code to test that everything is working (No need to touch)
+
+
