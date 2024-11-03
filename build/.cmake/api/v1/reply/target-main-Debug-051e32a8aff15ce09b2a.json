@@ -34,13 +34,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 1,
+				"line" : 2,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 20,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
@@ -73,7 +73,7 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 33,
+				"line" : 34,
 				"parent" : 0
 			},
 			{
@@ -92,27 +92,9 @@
 				"parent" : 10
 			},
 			{
-				"command" : 6,
-				"file" : 3,
-				"line" : 29,
-				"parent" : 10
-			},
-			{
-				"command" : 6,
-				"file" : 3,
-				"line" : 30,
-				"parent" : 10
-			},
-			{
-				"command" : 6,
-				"file" : 3,
-				"line" : 31,
-				"parent" : 10
-			},
-			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 7,
+				"line" : 5,
 				"parent" : 0
 			}
 		]
@@ -323,39 +305,39 @@
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/config"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/include"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040"
 				},
 				{
-					"backtrace" : 14,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/GCC/ARM_CM0"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/.."
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../barcode"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../motor"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../encoder"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../config"
 				},
 				{
@@ -832,39 +814,39 @@
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/config"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/include"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040"
 				},
 				{
-					"backtrace" : 14,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/GCC/ARM_CM0"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/.."
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../barcode"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../motor"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../encoder"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../config"
 				},
 				{
@@ -1304,39 +1286,39 @@
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/config"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/include"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040"
 				},
 				{
-					"backtrace" : 14,
+					"backtrace" : 11,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/GCC/ARM_CM0"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/.."
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../barcode"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../motor"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../encoder"
 				},
 				{
-					"backtrace" : 15,
+					"backtrace" : 12,
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/main/../config"
 				},
 				{
@@ -1563,15 +1545,15 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "encoder_lib::@372742a3ab0a8675e45e"
-		},
-		{
-			"backtrace" : 2,
 			"id" : "motor_lib::@20be63cfb80e5ff726d9"
 		},
 		{
 			"backtrace" : 2,
 			"id" : "barcode_lib::@9456b3d03f948601934f"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "encoder_lib::@372742a3ab0a8675e45e"
 		}
 	],
 	"id" : "main::@15c4a824ab2728a3f5e7",
@@ -2401,11 +2383,6 @@
 				"backtrace" : 2,
 				"fragment" : "-Wl,--wrap=getchar",
 				"role" : "flags"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "-lpico_cyw43_arch_lwip_threadsafe",
-				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,

@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "motor/libmotor_lib.a"
+			"path" : "barcode/libbarcode_lib.a"
 		}
 	],
 	"backtrace" : 1,
@@ -20,7 +20,7 @@
 		],
 		"files" : 
 		[
-			"motor/CMakeLists.txt",
+			"barcode/CMakeLists.txt",
 			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2/CMakeLists.txt",
 			"CMakeLists.txt"
 		],
@@ -32,7 +32,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 5,
+				"line" : 8,
 				"parent" : 0
 			},
 			{
@@ -53,7 +53,7 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 14,
+				"line" : 16,
 				"parent" : 0
 			},
 			{
@@ -66,27 +66,9 @@
 				"parent" : 6
 			},
 			{
-				"command" : 4,
-				"file" : 2,
-				"line" : 29,
-				"parent" : 6
-			},
-			{
-				"command" : 4,
-				"file" : 2,
-				"line" : 30,
-				"parent" : 6
-			},
-			{
-				"command" : 4,
-				"file" : 2,
-				"line" : 31,
-				"parent" : 6
-			},
-			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 11,
+				"line" : 13,
 				"parent" : 0
 			}
 		]
@@ -269,20 +251,20 @@
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/config"
 				},
 				{
-					"backtrace" : 8,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/include"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/GCC/ARM_CM0"
 				},
 				{
-					"backtrace" : 11,
-					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/motor"
+					"backtrace" : 8,
+					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/barcode"
 				},
 				{
 					"backtrace" : 5,
@@ -435,10 +417,6 @@
 				{
 					"backtrace" : 5,
 					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2/include"
-				},
-				{
-					"backtrace" : 5,
-					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_pwm/include"
 				}
 			],
 			"language" : "C",
@@ -661,20 +639,20 @@
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/config"
 				},
 				{
-					"backtrace" : 8,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/include"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/GCC/ARM_CM0"
 				},
 				{
-					"backtrace" : 11,
-					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/motor"
+					"backtrace" : 8,
+					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/barcode"
 				},
 				{
 					"backtrace" : 5,
@@ -827,10 +805,6 @@
 				{
 					"backtrace" : 5,
 					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2/include"
-				},
-				{
-					"backtrace" : 5,
-					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_pwm/include"
 				}
 			],
 			"language" : "ASM",
@@ -1041,20 +1015,20 @@
 					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/config"
 				},
 				{
-					"backtrace" : 8,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/include"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/ThirdParty/GCC/RP2040"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 7,
 					"path" : "C:/Users/azree/OneDrive/Desktop/FreeRTOS-Kernel-main/portable/GCC/ARM_CM0"
 				},
 				{
-					"backtrace" : 11,
-					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/motor"
+					"backtrace" : 8,
+					"path" : "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/barcode"
 				},
 				{
 					"backtrace" : 5,
@@ -1207,10 +1181,6 @@
 				{
 					"backtrace" : 5,
 					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2/include"
-				},
-				{
-					"backtrace" : 5,
-					"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_pwm/include"
 				}
 			],
 			"language" : "CXX",
@@ -1235,13 +1205,13 @@
 			"id" : "bs2_default_padded_checksummed_asm::@bc554eaed616d198a22d"
 		}
 	],
-	"id" : "motor_lib::@20be63cfb80e5ff726d9",
-	"name" : "motor_lib",
-	"nameOnDisk" : "libmotor_lib.a",
+	"id" : "barcode_lib::@9456b3d03f948601934f",
+	"name" : "barcode_lib",
+	"nameOnDisk" : "libbarcode_lib.a",
 	"paths" : 
 	{
-		"build" : "motor",
-		"source" : "motor"
+		"build" : "barcode",
+		"source" : "barcode"
 	},
 	"sourceGroups" : 
 	[
@@ -1316,12 +1286,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "motor/motor.c",
+			"path" : "barcode/barcode.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "motor/motor.h",
+			"path" : "barcode/barcode.h",
 			"sourceGroupIndex" : 1
 		},
 		{
