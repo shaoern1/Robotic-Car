@@ -1,40 +1,25 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.12)
 
-# Pull in SDK (must be before project)
+# Name project
+SET(ProjectName rp2040-freertos-template)
+
+# Set any variables required for importing libraries
+SET(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/FreeRTOS-Kernel)
+
+# Import those libraries
 include(pico_sdk_import.cmake)
-include(pico_extras_import_optional.cmake)
+include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
 
-project(RobotCar C CXX ASM)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
 
-# Check SDK version
-if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
-    message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
-endif()
+# Define project
+project(${ProjectName})
 
-# Initialize the SDK
+# Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# Set the board to Pico W
-set(PICO_BOARD pico_w CACHE STRING "Board type")
+# Add subdirectories
+add_subdirectory(main)
 
-# Include the FreeRTOS kernel
-include(FreeRTOS_Kernel_import.cmake)
-
-# Add config and FreeRTOS include directories
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/config
-    ${FREERTOS_KERNEL_PATH}/include
-    ${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040
-    ${FREERTOS_KERNEL_PATH}/portable/GCC/ARM_CM0
-)
-
-# Conditional subdirectories
-if (NOT PICO_NO_HARDWARE)
-    add_subdirectory(main)
-    add_subdirectory(motor)
-    add_subdirectory(barcode)
-    add_subdirectory(encoder)
-    
-endif()
+# if you have anything in "lib" folder then uncomment below - remember to add a CMakeLists.txt
+# file to the "lib" directory
+#add_subdirectory(lib)
