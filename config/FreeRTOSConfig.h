@@ -118,6 +118,9 @@
 /* Define to trap errors during development. */
 #define configASSERT(x)                         assert(x)
 
+/* Define configENABLE_MPU to enable or disable MPU support */
+#define configENABLE_MPU                        0
+
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet                1

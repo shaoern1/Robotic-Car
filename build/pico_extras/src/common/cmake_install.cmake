@@ -39,11 +39,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/common/pico_audio/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/common/pico_scanvideo/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/common/pico_sd_card/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/common/pico_util_buffer/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/common/platypus/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/src/common/pico_audio/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/src/common/pico_scanvideo/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/src/common/pico_sd_card/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/src/common/pico_util_buffer/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/src/common/platypus/cmake_install.cmake")
 
 endif()
 

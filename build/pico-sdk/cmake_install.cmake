@@ -39,10 +39,10 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/tools/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/src/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/src/cmake_install.cmake")
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/docs/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico-sdk/tools/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico-sdk/src/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/src/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico-sdk/docs/cmake_install.cmake")
 
 endif()
 

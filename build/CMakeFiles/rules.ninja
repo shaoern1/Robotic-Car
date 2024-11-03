@@ -202,7 +202,7 @@ rule CXX_STATIC_LIBRARY_LINKER__encoder_lib_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\cmake\bin\cmake.exe" --regenerate-during-build -SC:\Users\azree\OneDrive\Documents\GitHub\Robotic-Car -BC:\Users\azree\OneDrive\Documents\GitHub\Robotic-Car\build
+  command = "C:\Program Files\Raspberry Pi\Pico SDK v1.5.1\cmake\bin\cmake.exe" --regenerate-during-build -SC:\Users\azree\OneDrive\Desktop\Uni\Robotic-Car -BC:\Users\azree\OneDrive\Desktop\Uni\Robotic-Car\build
   description = Re-running CMake...
   generator = 1
 

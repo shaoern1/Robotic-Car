@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car
+# Install script for directory: C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,37 +39,37 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico_extras/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico_extras/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/pico-sdk/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/pico-sdk/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/FREERTOS_KERNEL/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/FREERTOS_KERNEL/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/main/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/main/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/motor/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/motor/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/barcode/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/barcode/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/encoder/cmake_install.cmake")
+  include("C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/encoder/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -80,5 +80,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

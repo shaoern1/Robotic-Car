@@ -18,9 +18,17 @@ pico_sdk_init()
 
 set(PICO_BOARD pico_w CACHE STRING "Board type")
 
+
+# Include the FreeRTOS kernel
 include(FreeRTOS_Kernel_import.cmake)
+
 # Add the config directory to include FreeRTOSConfig.h and lwipopts.h
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/config)
+
+# Add the FreeRTOS source directory to the include directories
+include_directories(${FREERTOS_KERNEL_PATH}/include)
+include_directories(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040)
+include_directories(${FREERTOS_KERNEL_PATH}/portable/GCC/ARM_CM0)  # Add this line
 
 if (NOT PICO_NO_HARDWARE)
     add_subdirectory(main)

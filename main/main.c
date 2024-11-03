@@ -7,9 +7,9 @@
 #include <string.h>
 #include "hardware/sync.h"
 #include "barcode.h"
-// I want to test config are properly defined and accessible
-// Check this header if the FreeRTOS is included
-//#include "FreeRTOS.h"
+#include <FreeRTOS.h>
+#include <task.h>
+
 // Function to init all sensors and motors
 void initAll()
 {

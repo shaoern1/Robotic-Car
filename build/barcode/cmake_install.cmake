@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/azree/OneDrive/Documents/GitHub/Robotic-Car/barcode
+# Install script for directory: C:/Users/azree/OneDrive/Desktop/Uni/Robotic-Car/barcode
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
