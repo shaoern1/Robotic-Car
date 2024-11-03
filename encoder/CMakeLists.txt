@@ -18,5 +18,6 @@ target_link_libraries(encoder_lib
 
 target_include_directories(encoder_lib PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
+
 # create map/bin/hex file etc.
 pico_enable_stdio_usb(encoder_lib 1)

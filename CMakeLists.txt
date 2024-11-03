@@ -33,7 +33,8 @@ project(RoboticCar)
 pico_sdk_init()
 
 # Add subdirectories
-add_subdirectory(blink)
+add_subdirectory(main)
 add_subdirectory(motor)
 add_subdirectory(encoder)
+
 

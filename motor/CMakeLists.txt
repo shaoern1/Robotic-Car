@@ -11,4 +11,4 @@ add_library(${target}
 target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
 # Link libraries (common dependencies and additional PWM hardware support)
-target_link_libraries(${target} pico_stdlib hardware_pwm)
+target_link_libraries(${target} pico_stdlib hardware_pwm encoder_lib)

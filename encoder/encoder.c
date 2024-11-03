@@ -1,23 +1,23 @@
 // Control L and R encoder
 
 #include "encoder.h"
-
-// Global variable declarations
-volatile bool is_complete_movement = false;
+#include "motor.h"
+// Global variable declaration
+volatile bool complete_movement = false;
 uint32_t target_grid_number = 0;
 uint32_t pulse_count_l = 0;
 uint32_t pulse_count_r = 0;
-volatile uint32_t pulse_count = 0;
-volatile float moved_distance = 0.0f;  // Add this line
+volatile uint32_t oscillation = 0;
+double moved_distance = 0.0;
 volatile float actual_speed_l;
 volatile float actual_speed_r;
-//static volatile float moved_distance = 0.0f;
+
 // Function to get motor speed and distance
-void get_speed_and_distance(int encoder, uint32_t pulse)
+void get_speed_and_distance(int encoder, uint32_t pulse_count)
 {
     // Calculate motor speed in cm/s
     double distance_per_hole = ENCODER_CIRCUMFERENCE / ENCODER_NOTCH;
-    double distance = distance_per_hole * pulse;
+    double distance = distance_per_hole * pulse_count;
     double speed = distance / 0.075;
 
     // Calculate and accumulate the distance
@@ -35,19 +35,20 @@ void get_speed_and_distance(int encoder, uint32_t pulse)
     return;
 }
 
-void start_tracking(int target_grid)
+void start_tracking(int target_grids)
 {
     moved_distance = 0;              // Reset the distance moved
-    target_grid_number = target_grid; // set the target number of grids
-    is_complete_movement = false;
+    target_grid_number = target_grids; // set the target number of grids
+    complete_movement = false;
+    printf("TARGET GRIDS: %d\n", target_grid_number);
     return;
 }
 
 uint32_t get_grids_moved(bool reset)
 {
-    encoder_callback(); // Calculate final moved_distancce
+    encoder_callback(); // Calculate final movedDistance
 
-    uint32_t grids_moved = (moved_distance / 14);
+    uint32_t grids_moved = moved_distance / 14;
     printf("DISTANCE TRAVELLED: %.2lf\n", moved_distance);
 
     if (reset)
@@ -60,9 +61,8 @@ uint32_t get_grids_moved(bool reset)
 }
 
 // Function to count each encoder's pulse
-void encoder_pulse(uint gpio)
+void encoder_pulse(uint gpio, uint32_t events)
 {
-    // Increment pulse counts based on GPIO pin
     if (gpio == L_ENCODER_OUT)
     {
         pulse_count_l++;
@@ -72,10 +72,10 @@ void encoder_pulse(uint gpio)
         pulse_count_r++;
     }
 
-    // Update moved distance
-    float distance_per_pulse = WHEEL_CIRCUMFERENCE / ENCODER_NOTCH;
-    moved_distance += distance_per_pulse;
+    oscillation++;
 }
+
+#define TARGET_DISTANCE_CM 90.0  // Define target distance in centimeters
 
 // Function to interrupt every second
 bool encoder_callback()
@@ -84,20 +84,16 @@ bool encoder_callback()
     get_speed_and_distance(0, pulse_count_l);
     get_speed_and_distance(1, pulse_count_r);
 
-    // Reset the pulse counts
     pulse_count_l = 0;
     pulse_count_r = 0;
 
-    if (target_grid_number > 0)
+    if (moved_distance >= TARGET_DISTANCE_CM)
     {
-        uint32_t grids_moved = (moved_distance / 10.5);
-        if (grids_moved >= target_grid_number)
-        {
-            target_grid_number = 0;    // Reset target number of grids
-            moved_distance = 0;       // Reset moved distance
-            is_complete_movement = true; // Set flag to indicate target number of grids reached
-        }
+        complete_movement = true;
+        stop_motor();
+        printf("Target distance of %.2f cm reached. Stopping motor.\n", TARGET_DISTANCE_CM);
     }
+
     return true;
 }
 
@@ -114,7 +110,7 @@ void init_encoder_setup()
 
     // Set GPIO settings for L encoder
     gpio_pull_up(L_ENCODER_OUT);
-    // gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, &encoder_pulse);
+    gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, encoder_pulse); // Removed '&'
 
     // Initialize GPIO pins for R encoder
     gpio_init(R_ENCODER_POW);
@@ -126,23 +122,9 @@ void init_encoder_setup()
 
     // Set GPIO settings for R encoder
     gpio_pull_up(R_ENCODER_OUT);
+    gpio_set_irq_enabled_with_callback(R_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, encoder_pulse); // Removed '&'
 
     // Enable the POW pins
     gpio_put(L_ENCODER_POW, 1);
     gpio_put(R_ENCODER_POW, 1);
-}
-
-
-
-void reset_encoder_counts()
-{
-    moved_distance = 0.0f;
-    // Reset encoder pulse counts as well
-    pulse_count_l = 0;
-    pulse_count_r = 0;
-}
-
-float get_moved_distance()
-{
-    return moved_distance;
 }

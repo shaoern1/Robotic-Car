@@ -1,6 +1,6 @@
 # Add your source files here
 add_executable(${PROJECT_NAME}
-    ${CMAKE_SOURCE_DIR}/main.c
+    main.c
     blink.c
 )
 

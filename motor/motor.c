@@ -1,3 +1,5 @@
+// Control L and R motor speed
+
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
@@ -5,208 +7,224 @@
 #include "hardware/timer.h"
 #include "motor.h"
 #include "math.h"
+#include "encoder.h"
 
-// Define button pins
-#define BTN22 22
-#define BTN21 21
+extern volatile float actual_speed_l;
+extern volatile float actual_speed_r;
 
-// Define variables
-float mtr1_speed = 0.0f;
-float mtr2_speed = 0.0f;
+// PID parameters
+float kp = 2.0;
+float ki = 2.0;
+float kd = 0.0;
 
-void setup_gpio_pins() {
-    // Motor 1
-    gpio_init(DIR_PIN1_1);
-    gpio_init(DIR_PIN1_2);
-    gpio_set_dir(DIR_PIN1_1, GPIO_OUT);
-    gpio_set_dir(DIR_PIN1_2, GPIO_OUT);
+// PID control variables
+float integral_l = 0.0;
+float integral_r = 0.0;
+float prev_error_l = 0.0;
+float prev_error_r = 0.0;
 
-    // Motor 2
-    gpio_init(DIR_PIN2_1);
-    gpio_init(DIR_PIN2_2);
-    gpio_set_dir(DIR_PIN2_1, GPIO_OUT);
-    gpio_set_dir(DIR_PIN2_2, GPIO_OUT);
+float setpoint_speed = 15.0;
 
-    // Set up PWM for mtr1 n mtr2
-    setup_pwm(PWM_PIN1, 100.0f, mtr1_speed);
-    setup_pwm(PWM_PIN2, 100.0f, mtr2_speed);
+volatile float pwm_l = 1900;
+volatile float pwm_r = 1890;
+
+// Function to initialize pins for motors
+void init_motor_setup()
+{
+    // Initialize GPIO pins for L motor control
+    gpio_init(L_MOTOR_IN1);
+    gpio_init(L_MOTOR_IN2);
+    gpio_init(L_MOTOR_ENA);
+
+    // Initialize GPIO pins for R motor control
+    gpio_init(R_MOTOR_IN3);
+    gpio_init(R_MOTOR_IN4);
+    gpio_init(R_MOTOR_ENB);
+
+    // Set GPIO pins as outputs for L motor
+    gpio_set_dir(L_MOTOR_IN1, GPIO_OUT);
+    gpio_set_dir(L_MOTOR_IN2, GPIO_OUT);
+    gpio_set_dir(L_MOTOR_ENA, GPIO_OUT);
+
+    // Set GPIO pins as outputs for R motor
+    gpio_set_dir(R_MOTOR_IN3, GPIO_OUT);
+    gpio_set_dir(R_MOTOR_IN4, GPIO_OUT);
+    gpio_set_dir(R_MOTOR_ENB, GPIO_OUT);
+
+    // Enable the EN pins
+    gpio_put(L_MOTOR_ENA, 1);
+    gpio_put(R_MOTOR_ENB, 1);
 }
 
-void init_motor() {
-    setup_gpio_pins();
-  
-}
-void setup_pwm(uint gpio, float freq, float duty_cycle) {
-    gpio_set_function(gpio, GPIO_FUNC_PWM);
-    uint slice_num = pwm_gpio_to_slice_num(gpio);
-    float clock_freq = 125000000.0f;
-    uint32_t divider = clock_freq / (freq * 65535.0f);
-    pwm_set_clkdiv(slice_num, divider);
-    pwm_set_wrap(slice_num, 65535);
-    pwm_set_gpio_level(gpio, (uint16_t)(duty_cycle * 65536.0f));
-    pwm_set_enabled(slice_num, true);
+// Function to initialize PWMs for motors
+void init_motor_pwm()
+{
+    // Set GPIO pins for ENA and ENB to PWM mode
+    gpio_set_function(L_MOTOR_ENA, GPIO_FUNC_PWM);
+    gpio_set_function(R_MOTOR_ENB, GPIO_FUNC_PWM);
+
+    // Get PWM slice and channel for ENA and ENB
+    uint slice_left = pwm_gpio_to_slice_num(L_MOTOR_ENA);
+    uint channel_left = pwm_gpio_to_channel(L_MOTOR_ENA);
+    uint slice_right = pwm_gpio_to_slice_num(R_MOTOR_ENB);
+    uint channel_right = pwm_gpio_to_channel(R_MOTOR_ENB);
+
+    // Set PWM frequency to 40kHz (125MHz / 3125)
+    pwm_set_wrap(slice_left, 3125);
+    pwm_set_wrap(slice_right, 3125);
+
+    // Set clock divider to 125
+    pwm_set_clkdiv(slice_left, 125);
+    pwm_set_clkdiv(slice_right, 125);
+
+    // Enable PWM for both motor channels
+    pwm_set_enabled(slice_left, true);
+    pwm_set_enabled(slice_right, true);
 }
 
-// Motor 1 Functions
-void mtr1_fwd() {
-    gpio_put(DIR_PIN1_1, 1);
-    gpio_put(DIR_PIN1_2, 0);
-    printf("Motor 1: Forward\n");
+// Function to move forward
+void move_motor(float new_pwm_l, float new_pwm_r)
+{
+    // printf("UPDATING MOTOR : LEFT - %f, RIGHT - %f\n", new_pwm_l, new_pwm_r);
+
+    // stop_motor();
+    sleep_ms(50);
+    // Set both motors to output high for desired PWM
+    // Get PWM slice and channel for ENA and ENB
+    uint slice_left = pwm_gpio_to_slice_num(L_MOTOR_ENA);
+    uint channel_left = pwm_gpio_to_channel(L_MOTOR_ENA);
+    uint slice_right = pwm_gpio_to_slice_num(R_MOTOR_ENB);
+    uint channel_right = pwm_gpio_to_channel(R_MOTOR_ENB);
+
+    // Set PWM frequency to 40kHz (125MHz / 3125)
+    pwm_set_wrap(slice_left, 3125);
+    pwm_set_wrap(slice_right, 3125);
+
+    // Set clock divider to 125
+    pwm_set_clkdiv(slice_left, 125);
+    pwm_set_clkdiv(slice_right, 125);
+
+    pwm_set_chan_level(slice_left, channel_left, new_pwm_l);
+    // sleep_ms(50);
+    pwm_set_chan_level(slice_right, channel_right, new_pwm_r);
+
+    // Turn on both motors
+    gpio_put(L_MOTOR_IN1, 0);
+    gpio_put(L_MOTOR_IN2, 1);
+    gpio_put(R_MOTOR_IN3, 0);
+    gpio_put(R_MOTOR_IN4, 1);
+
+    // Enable the enable pins
+    gpio_put(L_MOTOR_ENA, 1);
+    gpio_put(R_MOTOR_ENB, 1);
 }
 
-void mtr1_bwd() {
-    gpio_put(DIR_PIN1_1, 0);
-    gpio_put(DIR_PIN1_2, 1);
-    printf("Motor 1: Backward\n");
+// Function to move backward
+void reverse_motor(float new_pwm_l, float new_pwm_r)
+{
+    // stop_motor();
+    sleep_ms(50);
+
+    pwm_set_chan_level(pwm_gpio_to_slice_num(L_MOTOR_ENA), pwm_gpio_to_channel(L_MOTOR_ENA), new_pwm_l);
+    pwm_set_chan_level(pwm_gpio_to_slice_num(R_MOTOR_ENB), pwm_gpio_to_channel(R_MOTOR_ENB), new_pwm_r);
+
+    // Turn on both motors
+    gpio_put(L_MOTOR_IN1, 1);
+    gpio_put(L_MOTOR_IN2, 0);
+    gpio_put(R_MOTOR_IN3, 1);
+    gpio_put(R_MOTOR_IN4, 0);
+
+    // Enable the enable pins
+    gpio_put(L_MOTOR_ENA, 1);
+    gpio_put(R_MOTOR_ENB, 1);
 }
 
-void mtr1_stop() {
-    gpio_put(DIR_PIN1_1, 0);
-    gpio_put(DIR_PIN1_2, 0);
-    printf("Motor 1: Stop\n");
+// Function to stop
+void stop_motor()
+{
+    // Turn off all motors
+    gpio_put(L_MOTOR_IN1, 0);
+    gpio_put(L_MOTOR_IN2, 0);
+    gpio_put(R_MOTOR_IN3, 0);
+    gpio_put(R_MOTOR_IN4, 0);
+
+    // Disable the enable pins
+    gpio_put(L_MOTOR_ENA, 0);
+    gpio_put(R_MOTOR_ENB, 0);
 }
 
-void set_mtr1_speed(float speed) {
-    pwm_set_gpio_level(PWM_PIN1, (uint16_t)(speed * 65536.0f));
-}
+// Function to turn
+// 0 - left, 1 - right
+void turn_motor(int direction)
+{
+    // pwm_set_chan_level(pwm_gpio_to_slice_num(L_MOTOR_ENA), pwm_gpio_to_channel(L_MOTOR_ENA), pwm);
+    // pwm_set_chan_level(pwm_gpio_to_slice_num(R_MOTOR_ENB), pwm_gpio_to_channel(R_MOTOR_ENB), pwm);
 
-// Motor 2 Functions
-void mtr2_fwd() {
-    gpio_put(DIR_PIN2_1, 1);
-    gpio_put(DIR_PIN2_2, 0);
-    printf("Motor 2: Forward\n");
-}
+    oscillation = 0;
 
-void mtr2_bwd() {
-    gpio_put(DIR_PIN2_1, 0);
-    gpio_put(DIR_PIN2_2, 1);
-    printf("Motor 2: Backward\n");
-}
+    int target_notch_count = 190 * ENCODER_NOTCH / 360;
+    move_motor(3125, 3125);
 
-void mtr2_stop() {
-    gpio_put(DIR_PIN2_1, 0);
-    gpio_put(DIR_PIN2_2, 0);
-    printf("Motor 2: Stop\n");
-}
+    // Motor to turn left
+    if (direction == 0)
+    {
+        // Reverse left wheel, forward right wheel
+        gpio_put(L_MOTOR_IN1, 1);
+        gpio_put(L_MOTOR_IN2, 0);
+        gpio_put(R_MOTOR_IN3, 0);
+        gpio_put(R_MOTOR_IN4, 1);
 
-void set_mtr2_speed(float speed) {
-    pwm_set_gpio_level(PWM_PIN2, (uint16_t)(speed * 65536.0f));
-    float spd_prct = speed * 100.0f;
-    printf("Motor 2: Speed: %f\n", spd_prct);
-}
-
-// Preset Speeds
-void set_speed_20() {
-    set_mtr1_speed(0.2f);
-    set_mtr2_speed(0.2f);
-}
-
-void set_speed_40() {
-    set_mtr1_speed(0.4f);
-    set_mtr2_speed(0.4f);
-}
-
-void set_speed_60() {
-    set_mtr1_speed(0.6f);
-    set_mtr2_speed(0.6f);
-}
-
-void set_speed_80() {
-    set_mtr1_speed(0.8f);
-    set_mtr2_speed(0.8f);
-}
-
-void set_speed_100() {
-    set_mtr1_speed(1.0f);
-    set_mtr2_speed(1.0f);
-}
-
-// Preset Movements
-// Pivots
-void pivot_left() {
-    mtr1_fwd();
-    mtr2_bwd();
-    set_mtr1_speed(0.5f);
-    set_mtr2_speed(0.5f);
-}
-
-void pivot_right() {
-    mtr1_bwd();
-    mtr2_fwd();
-    set_mtr1_speed(0.5f);
-    set_mtr2_speed(0.5f);
-}
-
-// Leaning
-void lean_left() {
-    mtr1_fwd();
-    mtr2_fwd();
-    set_mtr1_speed(0.4f);
-    set_mtr2_speed(0.6f);
-}
-
-void lean_right() {
-    mtr1_fwd();
-    mtr2_fwd();
-    set_mtr1_speed(0.6f);
-    set_mtr2_speed(0.4f);
-}
-
-// Forward and Backward
-void move_fwd() {
-    mtr1_fwd();
-    mtr2_fwd();
-    set_mtr1_speed(0.5f);
-    set_mtr2_speed(0.5f);
-}
-
-void move_bwd() {
-    mtr1_bwd();
-    mtr2_bwd();
-    set_mtr1_speed(0.5f);
-    set_mtr2_speed(0.5f);
-}
-
-void stop() {
-    mtr1_stop();
-    mtr2_stop();
-    set_mtr1_speed(0.0f);
-    set_mtr2_speed(0.0f);
-}
-
-// Initialize button 22 for toggling motor
-void init_toggle_motor() {
-    gpio_init(BTN22);
-    gpio_set_dir(BTN22, GPIO_IN);
-    gpio_pull_up(BTN22);
-}
-
-// Function to toggle motor on and off
-void toggle_motor() {
-    if (gpio_get(BTN22) == 0) {
-        printf("Button 22 pressed\n");
-        sleep_ms(100); // Debounce delay
-        if (mtr1_speed == 0.0f && mtr2_speed == 0.0f) {
-            set_speed_40();
-            move_fwd();
-        } else {
-            stop();
-        }
+        // Enable the enable pins
+        gpio_put(L_MOTOR_ENA, 1);
+        gpio_put(R_MOTOR_ENB, 1);
     }
-}
+    // Motor to turn right
+    else
+    {
+        // Reverse right wheel, forward left wheel
+        gpio_put(L_MOTOR_IN1, 0);
+        gpio_put(L_MOTOR_IN2, 1);
+        gpio_put(R_MOTOR_IN3, 1);
+        gpio_put(R_MOTOR_IN4, 0);
 
-// Initialize button 21 for stopping motor
-void init_toggle_motor_off() {
-    gpio_init(BTN21);
-    gpio_set_dir(BTN21, GPIO_IN);
-    gpio_pull_up(BTN21);
-}
-
-// Function to stop motor with button 21
-void toggle_motor_off() {
-    if (gpio_get(BTN21) == 0) {
-        printf("Button 21 pressed\n");
-        sleep_ms(100); // Debounce delay
-        stop();
+        // Enable the enable pins
+        gpio_put(L_MOTOR_ENA, 1);
+        gpio_put(R_MOTOR_ENB, 1);
     }
+
+    while (oscillation < target_notch_count)
+    {
+        // wait
+    }
+
+    stop_motor();
+    sleep_ms(50);
+}
+
+// Function to move forward for a set number of grids
+void move_grids(int number_of_grids)
+{
+    start_tracking(number_of_grids);
+
+    while (!complete_movement)
+    {
+        move_motor(pwm_l, pwm_r);
+        sleep_ms(50);
+    }
+    // Stop once reached target grids
+    stop_motor();
+}
+
+// Function to move backwards for a set number of grids
+float calculate_control_signal(float *integral, float *prev_error, float error)
+{
+    *integral += error;
+
+    float derivative = error - *prev_error;
+
+    float control_signal = kp * error + ki * (*integral) + kd * derivative;
+
+    *prev_error = error;
+
+    return control_signal;
 }
