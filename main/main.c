@@ -5,6 +5,7 @@
 #include "hardware/gpio.h"
 #include "motor.h"
 #include "encoder.h"
+#include "ultrasonic.h"
 
 #define BUTTON_PIN 21      // GPIO pin connected to the button
 #define TARGET_GRIDS 90    // Target distance in centimeters

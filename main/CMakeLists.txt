@@ -10,6 +10,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     motor  # Include the motor directory
     encoder  # Include the encoder directory
+    ultrasonic
 )
 
 # Add required libraries
@@ -19,6 +20,7 @@ target_link_libraries(${PROJECT_NAME}
     pico_cyw43_arch_none
     motor_lib  # Link the motor library
     encoder_lib  # Link the encoder library
+    ultrasonic_lib
 )
 
 # Enable output over UART/USB
