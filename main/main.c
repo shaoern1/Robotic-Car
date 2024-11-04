@@ -13,52 +13,40 @@
 // Function prototypes
 void button_task(void *param);
 void distance_monitor_task(void *param);
-
+void ultrasonic_distance_task(void *param);
 int main()
 {
     // Initialize standard I/O
     stdio_init_all();
-    
     cyw43_arch_init();
+
     // Initialize encoders
     init_encoder_setup();
 
     // Initialize motors
     init_motor_setup();
     init_motor_pwm();
+
+    // Initialize Ultrasonic Sensor
+    ultrasonic_init();
+    kalman_state *state = kalman_init(1, 100, 1, 0); // Adjusted p from 0 to 1 for better Kalman performance
     
     // Initialize Button GPIO
     gpio_init(BUTTON_PIN);
     gpio_set_dir(BUTTON_PIN, GPIO_IN);
     gpio_pull_up(BUTTON_PIN);  // Use pull-up resistor
 
-    // Create Button Handling Task
-    BaseType_t button_result = xTaskCreate(
-        button_task,            // Task function
-        "ButtonTask",           // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        2,                      // Priority
-        NULL                    // Task handle
+    
+    // Create Ultrasonic Sensor Task
+    BaseType_t ultrasonic_result = xTaskCreate(
+        ultrasonic_distance_task,  // Task function
+        "UltrasonicDistance",      // Task name
+        1024,                      // Stack size (in words)
+        state,                     // Task parameters
+        1,                         // Priority
+        NULL                       // Task handle
     );
 
-    if (button_result != pdPASS) {
-        printf("Failed to create ButtonTask.\n");
-    }
-
-    // Create Distance Monitor Task
-    BaseType_t distance_result = xTaskCreate(
-        distance_monitor_task,  // Task function
-        "DistanceMonitor",      // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        1,                      // Priority
-        NULL                    // Task handle
-    );
-
-    if (distance_result != pdPASS) {
-        printf("Failed to create DistanceMonitor.\n");
-    }
 
     // Start the FreeRTOS scheduler
     vTaskStartScheduler();
@@ -129,4 +117,21 @@ void distance_monitor_task(void *param)
 
     // Delete the task after completion
     vTaskDelete(NULL);
-} //kill me
+} 
+
+void ultrasonic_distance_task(void *param)
+{
+    kalman_state *state = (kalman_state *)param;
+    double distance;
+
+    while (1)
+    {
+        
+        distance = ultrasonic_get_distance(state);
+        printf("Current distance: %.2f cm\n", distance);
+        vTaskDelay(pdMS_TO_TICKS(1)); // Print every 1 second
+    }
+
+    // Delete the task if needed
+    vTaskDelete(NULL);
+}
