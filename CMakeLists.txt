@@ -34,6 +34,6 @@ pico_sdk_init()
 
 # Add subdirectories
 add_subdirectory(main)
-add_subdirectory(common)
+
 
 

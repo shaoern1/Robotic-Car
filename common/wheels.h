@@ -2,7 +2,7 @@
 #define WHEELS_H_
 
 #include "motor.h"
-#include "pinaloc.h"
+#include "pins.h"
 
 enum CAR_STATE
 {

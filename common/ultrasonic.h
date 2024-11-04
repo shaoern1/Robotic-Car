@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "hardware/gpio.h"
 #include "hardware/timer.h"
-#include "pinaloc.h"
+#include "pins.h"
 
 // Interval in milliseconds for checking the distance
 #define CHECK_INTERVAL_MS 200

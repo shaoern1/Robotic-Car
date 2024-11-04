@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
-#include "pinaloc.h"
+#include "pins.h"
 
 #define CM_PER_NOTCH 1.005
 #define TIMEOUT_THRESHOLD 1500000

@@ -1,5 +1,3 @@
-//#include "FreeRTOS.h"
-//#include "task.h"
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 #include <stdio.h>
@@ -41,19 +39,24 @@ void change_state(uint8_t next_state)
     {
         case STATION_1_FIRST_PART:
             // Move the car forward at max speed
+            printf("Start works\n");		
             set_car_state(CAR_FORWARD);
             // Start timer
-            add_repeating_timer_ms(250, ultrasonic_sensor_callback, NULL, &ultrasonic_timer);
+            add_repeating_timer_ms(1000, ultrasonic_sensor_callback, NULL, &ultrasonic_timer);
             break;
         case STATION_1_TURN:
+            printf("Turn works\n");	
             station1_state = STATION_1_TURN;
             cancel_repeating_timer(&ultrasonic_timer);
             set_car_state(CAR_TURN_RIGHT);
+            set_wheels_duty_cycle(0.f);
             distToTurn = (float)ANGLE_TO_TURN / 360.f;
             break;
         case STATION_1_90_CM:
+            printf("90 cm works\n");
             // Move the car forward at max speed
             set_car_state(CAR_FORWARD);
+            break;
     }
 }
 
@@ -65,6 +68,7 @@ int main()
 {
     init_gpio();
     change_state(STATION_1_FIRST_PART);
+    init_interrupts();
 
     while (true) 
         tight_loop_contents();
@@ -104,10 +108,13 @@ void irq_handler(uint gpio, uint32_t events)
 
 bool ultrasonic_sensor_callback(struct repeating_timer *t)
 {
-
+    // Checks the current state of the test. If we are not at the first part of the test (Moving until object found 10cm away),
+    // stop this timer (because we have no reason to check distance otherwise)
     if (station1_state == STATION_1_FIRST_PART)
     {
+        
         float distance_to_item = getCm();
+        printf("Distance to item: %.2f cm\n", distance_to_item);	
         if (distance_to_item <= 10.f && distance_to_item > 0.0f)
             change_state(STATION_1_TURN);
     }
@@ -118,4 +125,3 @@ bool ultrasonic_sensor_callback(struct repeating_timer *t)
     }
     return true;
 }
-
