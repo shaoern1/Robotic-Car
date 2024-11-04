@@ -110,7 +110,7 @@ void init_encoder_setup()
 
     // Set GPIO settings for L encoder
     gpio_pull_up(L_ENCODER_OUT);
-    gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, encoder_pulse); // Removed '&'
+    
 
     // Initialize GPIO pins for R encoder
     gpio_init(R_ENCODER_POW);
@@ -122,7 +122,7 @@ void init_encoder_setup()
 
     // Set GPIO settings for R encoder
     gpio_pull_up(R_ENCODER_OUT);
-    gpio_set_irq_enabled_with_callback(R_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, encoder_pulse); // Removed '&'
+   
 
     // Enable the POW pins
     gpio_put(L_ENCODER_POW, 1);

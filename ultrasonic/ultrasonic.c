@@ -62,7 +62,7 @@ void ultrasonic_init()
     gpio_init(ECHO_PIN);
     gpio_set_dir(TRIG_PIN, GPIO_OUT);
     gpio_set_dir(ECHO_PIN, GPIO_IN);
-    gpio_set_irq_enabled_with_callback(ECHO_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &echo_pulse_handler);
+    
 }
 
 uint64_t ultrasonic_get_pulse()
@@ -79,14 +79,14 @@ double ultrasonic_get_distance(kalman_state *state)
 {
     uint64_t pulse_length = ultrasonic_get_pulse();
     double measured = pulse_length / 29.0 / 2.0;
-    kalman_update(state, measured);
+    //kalman_update(state, measured);
 
-    if (state->x < 10)
-    {
-        obstacle_detected = true;
-    }
+    //if (state->x < 10)
+    //{
+    //    obstacle_detected = true;
+    //}
 
-    return state->x;
+    return measured;
 }
 
 /*

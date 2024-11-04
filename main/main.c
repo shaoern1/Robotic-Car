@@ -14,11 +14,16 @@
 void button_task(void *param);
 void distance_monitor_task(void *param);
 void ultrasonic_distance_task(void *param);
+void init_interrtupt();
+void ihandler(uint gpio, uint32_t events);
 int main()
 {
     // Initialize standard I/O
     stdio_init_all();
     cyw43_arch_init();
+
+    // Initialize interrupt
+    init_interrtupt();
     
     // Initialize encoders
     init_encoder_setup();
@@ -156,12 +161,41 @@ void ultrasonic_distance_task(void *param)
 
     while (1)
     {
-        
+        move_motor(pwm_l, pwm_r);
         distance = ultrasonic_get_distance(state);
         printf("Current distance: %.2f cm\n", distance);
+        if(distance < 10){
+            printf("Obstacle detected\n");
+            stop_motor();
+            sleep_ms(1000);
+
+            break;
+        }
         vTaskDelay(pdMS_TO_TICKS(100)); // Print every 1 second
     }
 
     // Delete the task if needed
     vTaskDelete(NULL);
+}
+
+// init interrupt for encoder and ultrasonic sensor
+void init_interrtupt(){
+    
+    gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
+    gpio_set_irq_enabled_with_callback(R_ENCODER_OUT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
+    gpio_set_irq_enabled_with_callback(ECHO_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
+}
+
+void ihandler(uint gpio, uint32_t events){
+
+// encoder interrupt handler
+    if (gpio == L_ENCODER_OUT || gpio == R_ENCODER_OUT){
+        encoder_pulse(gpio, events);
+    }
+// ultrasonic sensor interrupt handler
+    else if (gpio == ECHO_PIN){
+        echo_pulse_handler(gpio, events);
+    }
+ 
+
 }
