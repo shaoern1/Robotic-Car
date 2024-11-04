@@ -81,7 +81,7 @@ uint64_t ultrasonic_get_pulse()
 double ultrasonic_get_distance(kalman_state *state)
 {
     uint64_t pulse_length = ultrasonic_get_pulse();
-    double measured = pulse_length / 58.0 / 2.0;
+    double measured = pulse_length / 29.0 / 2.0;
     kalman_update(state, measured);
 
     // Debug: Print the updated state
