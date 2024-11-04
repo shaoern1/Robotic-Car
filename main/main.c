@@ -8,17 +8,17 @@
 #include "ultrasonic.h"
 
 #define BUTTON_PIN 21      // GPIO pin connected to the button
-#define TARGET_GRIDS 90    // Target distance in centimeters
-
-// External variables
-extern volatile bool complete_movement;
+// #define TARGET_GRIDS 90    // Target distance in centimeters
 
 // Function prototypes
 void button_task(void *param);
 void movement_task(void *param);
+<<<<<<< HEAD
 void distance_monitor_task(void *param);
 void print_distance_task(void *param);
 
+=======
+>>>>>>> parent of ad286d0 (Revert back to debug ultrasonic)
 
 int main()
 {
@@ -101,16 +101,6 @@ void button_task(void *param)
                         1,                   // Task priority
                         NULL                 // Task handle
                     );
-
-                    // Create Distance Monitor Task
-                    xTaskCreate(
-                        distance_monitor_task,   // Task function
-                        "DistanceMonitorTask",   // Task name
-                        1024,                    // Stack size (in words)
-                        NULL,                    // Task parameter
-                        2,                       // Task priority
-                        NULL                     // Task handle
-                    );
                 }
             }
         }
@@ -128,20 +118,39 @@ void movement_task(void *param)
     double distance;
     uint64_t pulse_width;
 
+    // Move forward until an object is within 10cm
+    while (1)
+    {
+        distance = ultrasonic_get_distance(state);
+        printf("Distance: %.2f cm\n", distance);
+        if (distance <= 10.0)
+        {
+            stop_motor();
+            break;
+        }
+        move_motor(pwm_l, pwm_r);
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
+
+    // Turn 90 degrees to the right
+    turn_motor(1);
+    vTaskDelay(pdMS_TO_TICKS(500));
+
     // Move forward 90cm
     moved_distance = 0.0;
     complete_movement = false;
-    start_tracking(TARGET_GRIDS); // Start tracking for 90cm
-    move_grids(TARGET_GRIDS);      // Move 90cm
+    start_tracking(90.0); // Start tracking for 90cm
 
-    // Wait until movement is complete
-    while (!complete_movement) {
-        vTaskDelay(pdMS_TO_TICKS(100)); // Check every 100 ms
+    while (!complete_movement)
+    {
+        move_motor(pwm_l, pwm_r);
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 
     // Stop the motor and end the task
     stop_motor();
     vTaskDelete(NULL);
+<<<<<<< HEAD
 }
 
 void distance_monitor_task(void *param)
@@ -185,3 +194,6 @@ void print_distance_task(void *param)
     vTaskDelete(NULL);
 }
 
+=======
+}
+>>>>>>> parent of ad286d0 (Revert back to debug ultrasonic)
