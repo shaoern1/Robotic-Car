@@ -1,167 +1,121 @@
-#include "FreeRTOS.h"
-#include "task.h"
+//#include "FreeRTOS.h"
+//#include "task.h"
 #include "pico/stdlib.h"
-#include "pico/cyw43_arch.h"
-#include "hardware/gpio.h"
-#include "motor.h"
-#include "encoder.h"
+#include "hardware/pwm.h"
+#include <stdio.h>
+#include "wheels.h"
 #include "ultrasonic.h"
+#include "encoder.h"
 
-#define BUTTON_PIN 21      // GPIO pin connected to the button
-#define TARGET_GRIDS 90    // Target distance in centimeters
+#define BTN_START 21
+#define ANGLE_TO_TURN 90
 
-// Function prototypes
-void button_task(void *param);
-void distance_monitor_task(void *param);
-void ultrasonic_distance_task(void *param);
-int main()
+bool test_active = false;
+/// @brief this function can be called for changing state (so I don't have to rewrite the code in different parts) 
+void change_state(uint8_t next_state);
+// Variables for tracking what step of the test we are at
+enum STATION_1_STATE
 {
-    // Initialize standard I/O
-    stdio_init_all();
-    cyw43_arch_init();
-    
-    // Initialize encoders
-    init_encoder_setup();
-   
-    // Initialize motors
-    init_motor_setup();
-    init_motor_pwm();
-    
-    // Initialize Ultrasonic Sensor
-    ultrasonic_init(); //why this will cause my distance_monitor_task to not work
-    kalman_state *state = kalman_init(1, 100, 1, 0); // Adjusted p from 0 to 1 for better Kalman performance
-    
-    // Initialize Button GPIO
-    gpio_init(BUTTON_PIN);
-    gpio_set_dir(BUTTON_PIN, GPIO_IN);
-    gpio_pull_up(BUTTON_PIN);  // Use pull-up resistor
+    STATION_1_FIRST_PART = 0, // Moving until object found 10cm away
+    STATION_1_TURN, // Turn 90 degrees to the right
+    STATION_1_90_CM // Move forward 90cm in 5 seconds
+};
+uint8_t station1_state = STATION_1_FIRST_PART;
 
-    // Create Button Handling Task
-    BaseType_t button_result = xTaskCreate(
-        button_task,            // Task function
-        "ButtonTask",           // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        2,                      // Priority
-        NULL                    // Task handle
-    );
+// Timer variables and functions to manage polling of devices
+struct repeating_timer pid_timer;
+struct repeating_timer ultrasonic_timer;
+/// @brief checks the distance to the object in front of the car. If less than 10, stop 
+bool ultrasonic_sensor_callback(struct repeating_timer *t);
 
-    if (button_result != pdPASS) {
-        printf("Failed to create ButtonTask.\n");
-    }
+// For turning task
+// This is how much the left wheel needs to turn when 
+float distToTurn = 0.f;
 
-    // Create Distance Monitor Task
-    BaseType_t distance_result = xTaskCreate(
-        distance_monitor_task,  // Task function
-        "DistanceMonitor",      // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        1,                      // Priority
-        NULL                    // Task handle
-    );
-     
-    if (distance_result != pdPASS) {
-        printf("Failed to create DistanceMonitor.\n");
-    }
-
-    // Create Ultrasonic Sensor Task
-    BaseType_t ultrasonic_result = xTaskCreate(
-    ultrasonic_distance_task,    // Task function
-    "UltrasonicDistance",        // Task name
-    1024,                        // Stack size (in words)
-    (void *)state,               // Task parameter
-    1,                           // Task priority
-    NULL                         // Task handle
-    );
-
-    if (ultrasonic_result != pdPASS) {
-    printf("Failed to create UltrasonicDistance task.\n");
-    }
-
-    // Start the FreeRTOS scheduler
-    vTaskStartScheduler();
-
-    // Should never reach here
-    while (1) {
-        tight_loop_contents();
-    }
-
-    return 0;
-}
-
-/**
- * @brief Task to handle button presses on GPIO 21.
- *        Starts motor movement when button is pressed.
- */
-void button_task(void *param)
+void change_state(uint8_t next_state)
 {
-    (void)param;
-    static bool previous_state = true;
-    bool current_state;
-
-    while (1) {
-        current_state = gpio_get(BUTTON_PIN);
-
-        // Detect falling edge (button press)
-        if (current_state == false && previous_state == true) {
-            printf("Button pressed. Starting motor.\n");
-
-            // Start tracking TARGET_GRIDS
-            start_tracking(TARGET_GRIDS);
-
-            // Move forward TARGET_GRIDS
-            move_grids(TARGET_GRIDS);
-        }
-
-        previous_state = current_state;
-
-        vTaskDelay(pdMS_TO_TICKS(50)); // Debounce delay
-    }
-}
-
-/**
- * @brief Task to monitor the distance traveled using encoders.
- *        Stops the motor once the target distance is reached.
- */
-void distance_monitor_task(void *param)
-{
-    (void)param;
-
-    while (1) {
-        // Get the number of grids moved
-        uint32_t grids_moved = get_grids_moved(false);
-        printf("Grids moved: %d\n", grids_moved);
-        
-        // Check if movement is complete
-        if (complete_movement) {
-            printf("Target distance reached. Stopping motor.\n");
-            stop_motor();
-            break;
-            
-            // Optionally, reset tracking for next operation
-            start_tracking(TARGET_GRIDS);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(500)); // Check every 500 ms
-    }
-
-    // Delete the task after completion
-    vTaskDelete(NULL);
-} 
-
-void ultrasonic_distance_task(void *param)
-{
-    kalman_state *state = (kalman_state *)param;
-    double distance;
-
-    while (1)
+    station1_state = next_state;
+    test_active = false;
+    set_wheels_duty_cycle(0.f);
+    switch (next_state)
     {
-        
-        distance = ultrasonic_get_distance(state);
-        printf("Current distance: %.2f cm\n", distance);
-        vTaskDelay(pdMS_TO_TICKS(100)); // Print every 1 second
+        case STATION_1_FIRST_PART:
+            // Move the car forward at max speed
+            set_car_state(CAR_FORWARD);
+            // Start timer
+            add_repeating_timer_ms(250, ultrasonic_sensor_callback, NULL, &ultrasonic_timer);
+            break;
+        case STATION_1_TURN:
+            station1_state = STATION_1_TURN;
+            cancel_repeating_timer(&ultrasonic_timer);
+            set_car_state(CAR_TURN_RIGHT);
+            distToTurn = (float)ANGLE_TO_TURN / 360.f;
+            break;
+        case STATION_1_90_CM:
+            // Move the car forward at max speed
+            set_car_state(CAR_FORWARD);
     }
-
-    // Delete the task if needed
-    vTaskDelete(NULL);
 }
+
+void init_gpio();
+void init_interrupts();
+void irq_handler(uint gpio, uint32_t events);
+
+int main() 
+{
+    init_gpio();
+    change_state(STATION_1_FIRST_PART);
+
+    while (true) 
+        tight_loop_contents();
+}
+
+void init_gpio() 
+{
+    stdio_init_all();
+    init_wheels();
+    setupUltrasonicPins();
+}
+void init_interrupts()
+{
+    gpio_set_irq_enabled_with_callback(BTN_START, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
+    gpio_set_irq_enabled_with_callback(WHEEL_ENCODER_RIGHT_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
+    gpio_set_irq_enabled_with_callback(WHEEL_ENCODER_LEFT_PIN, GPIO_IRQ_EDGE_FALL, true, &irq_handler);
+}
+void irq_handler(uint gpio, uint32_t events)
+{
+    if (gpio == BTN_START)
+    {
+        if (!test_active)
+        {
+            set_wheels_duty_cycle(1.f);
+            test_active = true;
+        }
+    }
+    else if (gpio == WHEEL_ENCODER_LEFT_PIN && gpio == WHEEL_ENCODER_RIGHT_PIN)
+    {
+        encoderCallback(gpio, events);
+        if (station1_state == STATION_1_TURN && leftTotalDistance >= distToTurn)
+            change_state(STATION_1_90_CM);
+        else if (station1_state == STATION_1_90_CM && leftTotalDistance >= 90)
+            change_state(STATION_1_90_CM);
+    }
+}
+
+bool ultrasonic_sensor_callback(struct repeating_timer *t)
+{
+
+    if (station1_state == STATION_1_FIRST_PART)
+    {
+        float distance_to_item = getCm();
+        if (distance_to_item <= 10.f && distance_to_item > 0.0f)
+            change_state(STATION_1_TURN);
+    }
+    else 
+    {
+        // Realistically, we should never come here, but just to be safe...
+        cancel_repeating_timer(&ultrasonic_timer);
+    }
+    return true;
+}
+

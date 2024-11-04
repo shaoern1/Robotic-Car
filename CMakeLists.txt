@@ -34,8 +34,6 @@ pico_sdk_init()
 
 # Add subdirectories
 add_subdirectory(main)
-add_subdirectory(motor)
-add_subdirectory(encoder)
-add_subdirectory(ultrasonic)
+add_subdirectory(common)
 
 
