@@ -22,6 +22,8 @@ extern volatile bool complete_movement;
 extern volatile uint32_t oscillation;
 extern volatile float actual_speed_l;
 extern volatile float actual_speed_r;
+extern double moved_distance;
+
 
 // Functions for encoders
 void get_speed_and_distance(int encoder, uint32_t pulse_count);

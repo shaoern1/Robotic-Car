@@ -8,125 +8,127 @@
 #include "ultrasonic.h"
 
 #define BUTTON_PIN 21      // GPIO pin connected to the button
-#define TARGET_GRIDS 90    // Target distance in centimeters
+// #define TARGET_GRIDS 90    // Target distance in centimeters
 
 // Function prototypes
 void button_task(void *param);
-void distance_monitor_task(void *param);
+void movement_task(void *param);
 
 int main()
 {
     // Initialize standard I/O
     stdio_init_all();
-    
     cyw43_arch_init();
+
     // Initialize encoders
     init_encoder_setup();
 
     // Initialize motors
     init_motor_setup();
     init_motor_pwm();
-    
+
+    // Initialize Ultrasonic Sensor
+    ultrasonic_init();
+    kalman_state *state = kalman_init(1, 100, 0, 0);
+
     // Initialize Button GPIO
     gpio_init(BUTTON_PIN);
     gpio_set_dir(BUTTON_PIN, GPIO_IN);
     gpio_pull_up(BUTTON_PIN);  // Use pull-up resistor
 
     // Create Button Handling Task
-    BaseType_t button_result = xTaskCreate(
+    xTaskCreate(
         button_task,            // Task function
         "ButtonTask",           // Task name
         1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        2,                      // Priority
+        (void *)state,          // Task parameter
+        2,                      // Task priority
         NULL                    // Task handle
     );
 
-    if (button_result != pdPASS) {
-        printf("Failed to create ButtonTask.\n");
-    }
-
-    // Create Distance Monitor Task
-    BaseType_t distance_result = xTaskCreate(
-        distance_monitor_task,  // Task function
-        "DistanceMonitor",      // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        1,                      // Priority
-        NULL                    // Task handle
-    );
-
-    if (distance_result != pdPASS) {
-        printf("Failed to create DistanceMonitor.\n");
-    }
-
-    // Start the FreeRTOS scheduler
+    // Start the scheduler
     vTaskStartScheduler();
 
-    // Should never reach here
-    while (1) {
-        tight_loop_contents();
+    while (1)
+    {
+        // Should never reach here
     }
 
     return 0;
 }
 
-/**
- * @brief Task to handle button presses on GPIO 21.
- *        Starts motor movement when button is pressed.
- */
 void button_task(void *param)
 {
-    (void)param;
-    static bool previous_state = true;
-    bool current_state;
+    kalman_state *state = (kalman_state *)param;
+    bool button_pressed = false;
 
-    while (1) {
-        current_state = gpio_get(BUTTON_PIN);
-
-        // Detect falling edge (button press)
-        if (current_state == false && previous_state == true) {
-            printf("Button pressed. Starting motor.\n");
-
-            // Start tracking TARGET_GRIDS
-            start_tracking(TARGET_GRIDS);
-
-            // Move forward TARGET_GRIDS
-            move_grids(TARGET_GRIDS);
+    while (1)
+    {
+        // Check if button is pressed
+        if (gpio_get(BUTTON_PIN) == 0)
+        {
+            // Debounce delay
+            vTaskDelay(pdMS_TO_TICKS(50));
+            if (gpio_get(BUTTON_PIN) == 0)
+            {
+                if (!button_pressed)
+                {
+                    button_pressed = true;
+                    // Create Movement Task
+                    xTaskCreate(
+                        movement_task,       // Task function
+                        "MovementTask",      // Task name
+                        2048,                // Stack size (in words)
+                        (void *)state,       // Task parameter
+                        1,                   // Task priority
+                        NULL                 // Task handle
+                    );
+                }
+            }
         }
-
-        previous_state = current_state;
-
-        vTaskDelay(pdMS_TO_TICKS(50)); // Debounce delay
+        else
+        {
+            button_pressed = false;
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
-/**
- * @brief Task to monitor the distance traveled using encoders.
- *        Stops the motor once the target distance is reached.
- */
-void distance_monitor_task(void *param)
+void movement_task(void *param)
 {
-    (void)param;
+    kalman_state *state = (kalman_state *)param;
+    double distance;
 
-    while (1) {
-        // Get the number of grids moved
-        uint32_t grids_moved = get_grids_moved(false);
-        printf("Grids moved: %d\n", grids_moved);
-        
-        // Check if movement is complete
-        if (complete_movement) {
-            printf("Target distance reached. Stopping motor.\n");
+    // Move forward until an object is within 10cm
+    while (1)
+    {
+        distance = ultrasonic_get_distance(state);
+        printf("Distance: %.2f cm\n", distance);
+        if (distance <= 10.0)
+        {
             stop_motor();
             break;
-            
-            // Optionally, reset tracking for next operation
-            start_tracking(TARGET_GRIDS);
         }
-
-        vTaskDelay(pdMS_TO_TICKS(500)); // Check every 500 ms
+        move_motor(pwm_l, pwm_r);
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 
-    // Delete the task after completion
+    // Turn 90 degrees to the right
+    turn_motor(1);
+    vTaskDelay(pdMS_TO_TICKS(500));
+
+    // Move forward 90cm
+    moved_distance = 0.0;
+    complete_movement = false;
+    start_tracking(90.0); // Start tracking for 90cm
+
+    while (!complete_movement)
+    {
+        move_motor(pwm_l, pwm_r);
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
+
+    // Stop the motor and end the task
+    stop_motor();
     vTaskDelete(NULL);
 }
