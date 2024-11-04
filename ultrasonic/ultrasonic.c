@@ -62,7 +62,7 @@ void ultrasonic_init()
     gpio_init(ECHO_PIN);
     gpio_set_dir(TRIG_PIN, GPIO_OUT);
     gpio_set_dir(ECHO_PIN, GPIO_IN);
-    // gpio_set_irq_enabled_with_callback(ECHO_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &echo_pulse_handler);
+    gpio_set_irq_enabled_with_callback(ECHO_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &echo_pulse_handler);
 }
 
 uint64_t ultrasonic_get_pulse()
