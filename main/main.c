@@ -14,9 +14,12 @@
 void button_task(void *param);
 void movement_task(void *param);
 <<<<<<< HEAD
+<<<<<<< HEAD
 void distance_monitor_task(void *param);
 void print_distance_task(void *param);
 
+=======
+>>>>>>> parent of ad286d0 (Revert back to debug ultrasonic)
 =======
 >>>>>>> parent of ad286d0 (Revert back to debug ultrasonic)
 
@@ -136,6 +139,24 @@ void movement_task(void *param)
     turn_motor(1);
     vTaskDelay(pdMS_TO_TICKS(500));
 
+    // Move forward until an object is within 10cm
+    while (1)
+    {
+        distance = ultrasonic_get_distance(state);
+        printf("Distance: %.2f cm\n", distance);
+        if (distance <= 10.0)
+        {
+            stop_motor();
+            break;
+        }
+        move_motor(pwm_l, pwm_r);
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
+
+    // Turn 90 degrees to the right
+    turn_motor(1);
+    vTaskDelay(pdMS_TO_TICKS(500));
+
     // Move forward 90cm
     moved_distance = 0.0;
     complete_movement = false;
@@ -150,6 +171,7 @@ void movement_task(void *param)
     // Stop the motor and end the task
     stop_motor();
     vTaskDelete(NULL);
+<<<<<<< HEAD
 <<<<<<< HEAD
 }
 
@@ -194,6 +216,9 @@ void print_distance_task(void *param)
     vTaskDelete(NULL);
 }
 
+=======
+}
+>>>>>>> parent of ad286d0 (Revert back to debug ultrasonic)
 =======
 }
 >>>>>>> parent of ad286d0 (Revert back to debug ultrasonic)
