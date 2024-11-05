@@ -8,7 +8,6 @@
 #include "ultrasonic.h"
 
 #define BUTTON_PIN 21      // GPIO pin connected to the button
-
 typedef enum {
     IDLE = 0,
     Ultrasonic10cm,
@@ -100,6 +99,8 @@ void change_state(){
             printf("Traveling Mode\n");
             move_forward_cm(90.0); // Move forward 90 cm
             // current_state = Ultrasonic10cm;
+            current_state = IDLE;
+
             break;
         }
         default:
@@ -107,13 +108,18 @@ void change_state(){
     }
 }
 
-// Initialize interrupt for encoder and ultrasonic sensor
-void init_interrupt(){
-    gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
-    gpio_set_irq_enabled_with_callback(R_ENCODER_OUT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
+void init_interrupt() {
+    // Configure single-edge triggering for encoder pins (e.g., rising edge only)
+    gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, &ihandler);
+    gpio_set_irq_enabled_with_callback(R_ENCODER_OUT, GPIO_IRQ_EDGE_RISE, true, &ihandler);
+    
+    // Set up interrupt for ultrasonic sensor (both edges are okay for this one)
     gpio_set_irq_enabled_with_callback(ECHO_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
+
+    // Set up button interrupt on falling edge
     gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, &ihandler);
 }
+
 
 void ihandler(uint gpio, uint32_t events){
     if (gpio == BUTTON_PIN)
@@ -135,24 +141,22 @@ void ihandler(uint gpio, uint32_t events){
     }
 }
 
-// Function to turn right 90 degrees
-void turn_right_90()
-{
+void turn_right_90() {
+    // Example PWM values for turning
+    float pwm_l = 3125;  // Left motor power for right turn
+    float pwm_r = 2500;  // Right motor power for right turn
 
-    // Set PWM for turning
-    pwm_l = 3125;
-    pwm_r = 3125;
-    turn_motor(1);
+    int delay_ms = 425; // Adjust based on testing for a 90-degree turn
 
-    // Wait for turn to complete (adjust delay as needed)
-    sleep_ms(500);
-
-    stop_motor();
+    // Call turn_motor with direction 1 (right turn), PWM values, and delay
+    turn_motor(1, pwm_l, pwm_r, delay_ms);
 }
 
 // Function to move forward a specific distance in cm
 void move_forward_cm(float distance)
 {
+    pwm_l = 2950;  // Left motor speed for turning
+    pwm_r = 3125;  // Right motor speed for turning
     int target_grid_number =  distance / 14;
     start_tracking(target_grid_number);
     move_grids(target_grid_number); // Convert distance to number of grids
@@ -168,7 +172,7 @@ void move_forward_cm(float distance)
             break;
 
             // Optionally, reset tracking for next operation
-            start_tracking(target_grid_number);
+            //start_tracking(target_grid_number);
         }
 
         vTaskDelay(pdMS_TO_TICKS(500)); // Check every 500 ms
