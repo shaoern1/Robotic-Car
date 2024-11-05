@@ -1,27 +1,14 @@
-add_executable(motor motor.c)
+# Define target
+set(target motor_lib)
 
-# pull in common dependencies and additional pwm hardware support
-target_link_libraries(motor 
-        pico_stdlib 
-        hardware_pwm
-        )
+# Add library target for source file
+add_library(${target}
+    motor.c
+    motor.h
+)
 
-# enable usb output, disable uart output
-pico_enable_stdio_usb(motor 1)
+# Include directories for the library
+target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
-# create map/bin/hex file etc.
-pico_add_extra_outputs(motor)
-
-add_library(motor_lib
-        motor.c
-        motor.h
-        )
-
-# pull in common dependencies
-target_link_libraries(motor_lib
-    pico_stdlib 
-    hardware_pwm
-    )
-
-# create map/bin/hex file etc.
-pico_enable_stdio_usb(motor_lib 1)
+# Link libraries (common dependencies and additional PWM hardware support)
+target_link_libraries(${target} pico_stdlib hardware_pwm encoder_lib)

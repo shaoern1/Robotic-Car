@@ -1,25 +1,41 @@
-cmake_minimum_required(VERSION 3.25)
+# == DO NEVER EDIT THE NEXT LINES for Raspberry Pi Pico VS Code Extension to work ==
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 2.0.0)
+set(toolchainVersion 13_2_Rel1)
+set(picotoolVersion 2.0.0)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+# ====================================================================================
+# Generated Cmake Pico project file
+cmake_minimum_required(VERSION 3.13)
 
-# Pull in SDK (must be before project)
-include(pico_sdk_import.cmake)
-include(pico_extras_import_optional.cmake)
-include(FreeRTOS_Kernel_import.cmake)
-
-project(RobotCar C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-set(PICO_BOARD pico_w)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
-    message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
-endif()
+set(PICO_BOARD pico_w CACHE STRING "Board type")
+SET(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS-Kernel)
 
-# Initialize the SDK
+# Pull in Raspberry Pi Pico SDK (must be before project)
+include(pico_sdk_import.cmake)
+include(${FREERTOS_KERNEL_PATH}/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+
+# Change the project name here, and use the build in ${PROJECT_NAME} to reference it
+project(RoboticCar)
+
+# Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-if (NOT PICO_NO_HARDWARE)
-    add_subdirectory(main)
-    
-    add_subdirectory(barcode)
+# Add subdirectories
+add_subdirectory(main)
+add_subdirectory(motor)
+add_subdirectory(encoder)
+add_subdirectory(ultrasonic)
 
-endif ()
+

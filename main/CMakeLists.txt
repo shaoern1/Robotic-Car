@@ -1,32 +1,36 @@
-add_executable(main
-        main.c
-        #${CMAKE_CURRENT_LIST_DIR}/../wifi/cgi.c 
-        #${CMAKE_CURRENT_LIST_DIR}/../wifi/ssi.c
-        )
+# Add your source files here
+add_executable(${PROJECT_NAME}
+    main.c
+    blink.c
+)
 
-target_include_directories(main PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/..
-        ${CMAKE_CURRENT_LIST_DIR}/../barcode
+# Include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}
+    motor  # Include the motor directory
+    encoder  # Include the encoder directory
+    ultrasonic
+)
 
-        )
+# Add required libraries
+target_link_libraries(${PROJECT_NAME}
+    pico_stdlib
+    FreeRTOS-Kernel-Heap4
+    pico_cyw43_arch_none
+    motor_lib  # Link the motor library
+    encoder_lib  # Link the encoder library
+    ultrasonic_lib
+)
 
-target_compile_definitions(main PRIVATE
-        PICO_MAX_SHARED_IRQ_HANDLERS=5
-        )
+# Enable output over UART/USB
+pico_enable_stdio_uart(${PROJECT_NAME} 1)
+pico_enable_stdio_usb(${PROJECT_NAME} 1)
 
-# pull in common dependencies
-target_link_libraries(main 
-        #pico_cyw43_arch_lwip_threadsafe_background
-        #pico_lwip_http
-        hardware_adc
+# Set the runtime output directory
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/main"
+)
 
-        barcode_lib
-        )
 
-# create map/bin/hex file etc.
-pico_add_extra_outputs(main)
-
-# enable usb output, disable uart output
-pico_enable_stdio_usb(main 1)
-pico_enable_stdio_uart(main 0)
+pico_add_extra_outputs(${PROJECT_NAME})

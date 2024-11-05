@@ -6,56 +6,29 @@
 #include "hardware/gpio.h"
 #include "hardware/pwm.h"
 
-// GPIO pins for motor 1
-#define PWM_PIN1 4
-#define DIR_PIN1_1 2
-#define DIR_PIN1_2 3
+// Define motor pins
+#define L_MOTOR_IN1 3  // GPIO pin for L motor input 1
+#define L_MOTOR_IN2 2  // GPIO pin for L motor input 2
+#define L_MOTOR_ENA 4  // GPIO pin for L motor enable
+#define R_MOTOR_IN3 9  // GPIO pin for R motor input 1
+#define R_MOTOR_IN4 8  // GPIO pin for R motor input 2
+#define R_MOTOR_ENB 6  // GPIO pin for R motor enable
+#define PWM_MIN 1600
+#define PWM_MAX 3125
 
-// GPIO pins for motor 2
-#define PWM_PIN2 6
-#define DIR_PIN2_1 8
-#define DIR_PIN2_2 9
+// External variables
+extern volatile float pwm_l;
+extern volatile float pwm_r;
 
-// GPIO pins for buttons
-#define BTN20 20
-#define BTN21 21
-#define BTN22 22
+// Functions for motors
+void init_motor_setup();
+void init_motor_pwm();
+void move_motor(float pwm_l, float pwm_r);
+void reverse_motor(float pwm_l, float pwm_r);
+void stop_motor();
+void turn_motor(int direction);
+void update_motor_speed();
+void move_grids(int number_of_grids);
+float calculate_control_signal(float *integral, float *prev_error, float error);
 
-// Variables
-extern float mtr1_speed;
-extern float mtr2_speed;
-
-// Function prototypes
-void init_barcode();
-void setup_gpio_pins();
-void setup_pwm(uint gpio, float freq, float duty_cycle);
-
-// Motor 1 control functions
-void mtr1_fwd();
-void mtr1_bwd();
-void mtr1_stop();
-void set_mtr1_speed(float speed);
-
-// Motor 2 control functions
-void mtr2_fwd();
-void mtr2_bwd();
-void mtr2_stop();
-void set_mtr2_speed(float speed);
-
-// Preset speeds
-void set_speed_20();
-void set_speed_40();
-void set_speed_60();
-void set_speed_80();
-void set_speed_100();
-
-// Preset movements
-void pivot_left();
-void pivot_right();
-void lean_left();
-void lean_right();
-void move_fwd();
-void move_bwd();
-void stop();
-
-#endif // MOTOR_H
+#endif
