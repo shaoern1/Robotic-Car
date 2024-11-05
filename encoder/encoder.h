@@ -22,13 +22,13 @@ extern volatile bool complete_movement;
 extern volatile uint32_t oscillation;
 extern volatile float actual_speed_l;
 extern volatile float actual_speed_r;
-
+extern double moved_distance;
 // Functions for encoders
 void get_speed_and_distance(int encoder, uint32_t pulse_count);
 void encoder_pulse(uint gpio, uint32_t events);
 bool encoder_callback();
 void init_encoder_setup();
 uint32_t get_grids_moved(bool reset);
-void start_tracking(int target_grids);
+void start_tracking(float target_grids);
 
 #endif

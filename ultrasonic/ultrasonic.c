@@ -95,7 +95,7 @@ int main()
     // Driver code to run ultrasonic sensor
     double distance;
     stdio_init_all();
-    printf("Initializing ultrasonic sensor\n");
+    //printf("Initializing ultrasonic sensor\n");
     ultrasonic_init();
     kalman_state *state = kalman_init(1, 100, 0, 0);
     sleep_ms(1000);
@@ -105,7 +105,7 @@ int main()
         {
             distance = ultrasonic_get_distance(state);
         }
-        printf("Distance: %.2lf cm\n", distance);
+        //printf("Distance: %.2lf cm\n", distance);
         sleep_ms(500);
     }
 }

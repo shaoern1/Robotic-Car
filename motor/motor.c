@@ -85,7 +85,7 @@ void init_motor_pwm()
 // Function to move forward
 void move_motor(float new_pwm_l, float new_pwm_r)
 {
-    // printf("UPDATING MOTOR : LEFT - %f, RIGHT - %f\n", new_pwm_l, new_pwm_r);
+    // //printf("UPDATING MOTOR : LEFT - %f, RIGHT - %f\n", new_pwm_l, new_pwm_r);
 
     // stop_motor();
     sleep_ms(50);
@@ -159,7 +159,7 @@ void turn_motor(int direction)
 {
     // pwm_set_chan_level(pwm_gpio_to_slice_num(L_MOTOR_ENA), pwm_gpio_to_channel(L_MOTOR_ENA), pwm);
     // pwm_set_chan_level(pwm_gpio_to_slice_num(R_MOTOR_ENB), pwm_gpio_to_channel(R_MOTOR_ENB), pwm);
-    printf("Turning motor\n");
+    //printf("Turning motor\n");
     oscillation = 0;
 
     int target_notch_count = 190 * ENCODER_NOTCH / 360;
@@ -168,7 +168,7 @@ void turn_motor(int direction)
     // Motor to turn left
     if (direction == 0)
     {
-        printf("Turning left\n");
+        //printf("Turning left\n");
         // Reverse left wheel, forward right wheel
         gpio_put(L_MOTOR_IN1, 1);
         gpio_put(L_MOTOR_IN2, 0);
@@ -182,7 +182,7 @@ void turn_motor(int direction)
     // Motor to turn right
     else
     {
-        printf("Turning right\n");
+        //printf("Turning right\n");
         // Reverse right wheel, forward left wheel
         gpio_put(L_MOTOR_IN1, 0);
         gpio_put(L_MOTOR_IN2, 1);
@@ -211,10 +211,12 @@ void move_grids(int number_of_grids)
     while (!complete_movement)
     {
         move_motor(pwm_l, pwm_r);
+        get_grids_moved(false);
         sleep_ms(50);
     }
     // Stop once reached target grids
     stop_motor();
+    // get_grids_moved(true);
 }
 
 // Function to move backwards for a set number of grids

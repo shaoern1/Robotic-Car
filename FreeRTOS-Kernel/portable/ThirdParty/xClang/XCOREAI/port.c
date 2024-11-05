@@ -18,7 +18,7 @@ void vIntercoreInterruptISR( void )
 {
 	int xCoreID;
 
-//	debug_printf( "In KCALL: %u\n", ulData );
+//	debug_//printf( "In KCALL: %u\n", ulData );
 	xCoreID = rtos_core_id_get();
 	ulPortYieldRequired[ xCoreID ] = pdTRUE;
 }
@@ -74,9 +74,9 @@ void vPortYieldOtherCore( int xOtherCoreID )
 
 	xCoreID = rtos_core_id_get();
 
-//	debug_printf("%d->%d\n", xCoreID, xOtherCoreID);
+//	debug_//printf("%d->%d\n", xCoreID, xOtherCoreID);
 
-//	debug_printf("Yield core %d from %d\n", xOtherCoreID, xCoreID );
+//	debug_//printf("Yield core %d from %d\n", xOtherCoreID, xCoreID );
 
 	rtos_irq( xOtherCoreID, xCoreID );
 }
@@ -87,7 +87,7 @@ static int prvCoreInit( void )
 	int xCoreID;
 
 	xCoreID = rtos_core_register();
-	debug_printf( "Logical Core %d initializing as FreeRTOS Core %d\n", get_logical_core_id(), xCoreID );
+	debug_//printf( "Logical Core %d initializing as FreeRTOS Core %d\n", get_logical_core_id(), xCoreID );
 
 	asm volatile (
 			"ldap r11, kexcept\n\t"
@@ -108,7 +108,7 @@ static int prvCoreInit( void )
 	{
 		uint32_t ulNow;
 		ulNow = hwtimer_get_time( xKernelTimer );
-//		debug_printf( "The time is now (%u)\n", ulNow );
+//		debug_//printf( "The time is now (%u)\n", ulNow );
 
 		ulNow += configCPU_CLOCK_HZ / configTICK_RATE_HZ;
 
@@ -135,7 +135,7 @@ DEFINE_RTOS_KERNEL_ENTRY( void, vPortStartSchedulerOnCore, void )
 	}
 	#endif
 
-	debug_printf( "FreeRTOS Core %d initialized\n", xCoreID );
+	debug_//printf( "FreeRTOS Core %d initialized\n", xCoreID );
 
 	/*
 	 * Restore the context of the first thread
@@ -161,7 +161,7 @@ DEFINE_RTOS_KERNEL_ENTRY( void, vPortStartSchedulerOnCore, void )
  */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-	//debug_printf( "Top of stack was %p for task %p\n", pxTopOfStack, pxCode );
+	//debug_//printf( "Top of stack was %p for task %p\n", pxTopOfStack, pxCode );
 	/*
 	 * Grow the thread's stack by portTHREAD_CONTEXT_STACK_GROWTH
 	 * so we can push the context onto it.
@@ -217,7 +217,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	memset(&pxTopOfStack[29], 1, 32);                 /* SP[29 - 36] := vD   */
 	memset(&pxTopOfStack[37], 2, 32);                 /* SP[37 - 44] := vC   */
 
-	//debug_printf( "Top of stack is now %p for task %p\n", pxTopOfStack, pxCode );
+	//debug_//printf( "Top of stack is now %p for task %p\n", pxTopOfStack, pxCode );
 
 	/*
 	 * Returns the new top of the stack

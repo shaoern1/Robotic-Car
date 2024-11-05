@@ -16,39 +16,48 @@ volatile float actual_speed_r;
 void get_speed_and_distance(int encoder, uint32_t pulse_count)
 {
     // Calculate motor speed in cm/s
-    double distance_per_hole = ENCODER_CIRCUMFERENCE / ENCODER_NOTCH;
+    double distance_per_hole = 1.005;
     double distance = distance_per_hole * pulse_count;
     double speed = distance / 0.075;
-
+    
     // Calculate and accumulate the distance
     moved_distance += distance;
-
+    //printf("DISTANCE TRAVELLED: Test %.2lf\n", moved_distance);
+    //printf("DISTANCE Test: %.2lf\n", distance);
     // Print motor speed and total distance
     if (encoder == 0)
     {
         actual_speed_l = speed;
+
+        
     }
     else if (encoder == 1)
     {
         actual_speed_r = speed;
+
+        
     }
-    return;
+    
+}
+void reset_pulse(){
+
 }
 
-void start_tracking(int target_grids)
+void start_tracking(float target_grids)
 {
     moved_distance = 0;              // Reset the distance moved
     target_grid_number = target_grids; // set the target number of grids
     complete_movement = false;
-    printf("TARGET GRIDS: %d\n", target_grid_number);
+    //printf("TARGET GRIDS: %d\n", target_grid_number);
     return;
 }
 
 uint32_t get_grids_moved(bool reset)
 {
     encoder_callback(); // Calculate final movedDistance
-
+    //printf("PREDISTANCE TRAVELLED: %.2lf\n", moved_distance);
     uint32_t grids_moved = moved_distance / 14;
+
     printf("DISTANCE TRAVELLED: %.2lf\n", moved_distance);
 
     if (reset)
@@ -80,24 +89,19 @@ void encoder_pulse(uint gpio, uint32_t events)
 // Function to interrupt every second
 bool encoder_callback()
 {
+    printf("PULSE COUNT L: %d\n", pulse_count_l);
     // Call get_speed_and_distance function every second
     get_speed_and_distance(0, pulse_count_l);
     get_speed_and_distance(1, pulse_count_r);
 
     pulse_count_l = 0;
     pulse_count_r = 0;
-
-    if (moved_distance >= TARGET_DISTANCE_CM)
-    {
+    //printf("Out side if DISTANCE TRAVELLED: %.2lf\n", moved_distance);
+    // Check if target distance is reached
+    if (moved_distance >= TARGET_DISTANCE_CM || (uint32_t)(moved_distance / 14.0) >= target_grid_number) {
         complete_movement = true;
         stop_motor();
-        printf("Target distance of %.2f cm reached. Stopping motor.\n", TARGET_DISTANCE_CM);
-    }
-    else if (get_grids_moved(false) >= target_grid_number)
-    {
-        complete_movement = true;
-        stop_motor();
-        printf("Target grids of %d reached. Stopping motor.\n", target_grid_number);
+        printf("Target distance of %.2lf cm or %d grids reached. Stopping motor.\n", TARGET_DISTANCE_CM, target_grid_number);
     }
 
     return true;
@@ -117,7 +121,6 @@ void init_encoder_setup()
     // Set GPIO settings for L encoder
     gpio_pull_up(L_ENCODER_OUT);
     
-
     // Initialize GPIO pins for R encoder
     gpio_init(R_ENCODER_POW);
     gpio_init(R_ENCODER_OUT);

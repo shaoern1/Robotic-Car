@@ -97,9 +97,9 @@ void change_state(){
         }
         case Travel90cm:
         {
-            printf("Traveling 90 cm\n");
+            printf("Traveling Mode\n");
             move_forward_cm(90.0); // Move forward 90 cm
-            current_state = Ultrasonic10cm;
+            // current_state = Ultrasonic10cm;
             break;
         }
         default:
@@ -153,20 +153,25 @@ void turn_right_90()
 // Function to move forward a specific distance in cm
 void move_forward_cm(float distance)
 {
-    printf("Moving forward %.2f cm\n", distance);
-    start_tracking(distance / 14.0); // Assuming 14 cm per grid
-    // If the distance is 90 the car wil move 6 grids and once it met the car will stop motor
-    while (!complete_movement)
-    {
-        printf("Moving forward\n");
-        move_motor(pwm_l, pwm_r);
-        sleep_ms(50);
-        if (TARGET_DISTANCE_CM == distance)
-        {
+    int target_grid_number =  distance / 14;
+    start_tracking(target_grid_number);
+    move_grids(target_grid_number); // Convert distance to number of grids
+    while (1) {
+        // Get the number of grids moved
+        uint32_t grids_moved = get_grids_moved(false);
+        printf("Grids moved: %d\n", grids_moved);
+
+        // Check if movement is complete
+        if (complete_movement) {
+            printf("Target distance reached. Stopping motor.\n");
             stop_motor();
+            break;
+
+            // Optionally, reset tracking for next operation
+            start_tracking(target_grid_number);
         }
+
+        vTaskDelay(pdMS_TO_TICKS(500)); // Check every 500 ms
     }
-    printf("Target distance of %.2f cm reached. Stopping motor.\n", distance);
-    stop_motor();
 
 }
