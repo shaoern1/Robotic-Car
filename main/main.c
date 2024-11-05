@@ -61,7 +61,7 @@ int main()
     }
 }
 
-void change_state(){
+void change_state() {
     printf("Current state: %d\n", current_state);
     switch (current_state)
     {   
@@ -75,7 +75,7 @@ void change_state(){
         {
             double distance = ultrasonic_get_distance(ultrasonic_state);
             printf("Distance: %.2lf cm\n", distance);
-            if (distance > 10.0)
+            if (distance > 12.0)
             {
                 move_motor(pwm_l, pwm_r); // Move forward
             }
@@ -98,9 +98,7 @@ void change_state(){
         {
             printf("Traveling Mode\n");
             move_forward_cm(90.0); // Move forward 90 cm
-            // current_state = Ultrasonic10cm;
             current_state = IDLE;
-
             break;
         }
         default:
@@ -120,8 +118,7 @@ void init_interrupt() {
     gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, &ihandler);
 }
 
-
-void ihandler(uint gpio, uint32_t events){
+void ihandler(uint gpio, uint32_t events) {
     if (gpio == BUTTON_PIN)
     {
         if (current_state == IDLE)
@@ -132,50 +129,54 @@ void ihandler(uint gpio, uint32_t events){
             current_state = Travel90cm;
     }
     // Encoder interrupt handler
-    if (gpio == L_ENCODER_OUT || gpio == R_ENCODER_OUT){
+    if (gpio == L_ENCODER_OUT || gpio == R_ENCODER_OUT) {
         encoder_pulse(gpio, events);
     }
     // Ultrasonic sensor interrupt handler
-    else if (gpio == ECHO_PIN){
+    else if (gpio == ECHO_PIN) {
         echo_pulse_handler(gpio, events);
     }
 }
 
 void turn_right_90() {
     // Example PWM values for turning
-    float pwm_l = 3125;  // Left motor power for right turn
-    float pwm_r = 2500;  // Right motor power for right turn
+    pwm_l = 3125;  // Left motor power for right turn
+    pwm_r = 2500;  // Right motor power for right turn
 
-    int delay_ms = 425; // Adjust based on testing for a 90-degree turn
+    int delay_ms = 400; // Adjust based on testing for a 90-degree turn
 
     // Call turn_motor with direction 1 (right turn), PWM values, and delay
     turn_motor(1, pwm_l, pwm_r, delay_ms);
 }
 
 // Function to move forward a specific distance in cm
-void move_forward_cm(float distance)
-{
-    pwm_l = 2950;  // Left motor speed for turning
-    pwm_r = 3125;  // Right motor speed for turning
-    int target_grid_number =  distance / 14;
-    start_tracking(target_grid_number);
-    move_grids(target_grid_number); // Convert distance to number of grids
-    while (1) {
-        // Get the number of grids moved
-        uint32_t grids_moved = get_grids_moved(false);
-        printf("Grids moved: %d\n", grids_moved);
+void move_forward_cm(float distance) {
+    // Set PWM values for forward movement
+    pwm_l = 2800;  // Adjusted left motor speed
+    pwm_r = 3150;  // Adjusted right motor speed
 
-        // Check if movement is complete
-        if (complete_movement) {
-            printf("Target distance reached. Stopping motor.\n");
-            stop_motor();
-            break;
+    // Set the motors to move forward
+    uint slice_left = pwm_gpio_to_slice_num(L_MOTOR_ENA);
+    uint slice_right = pwm_gpio_to_slice_num(R_MOTOR_ENB);
 
-            // Optionally, reset tracking for next operation
-            //start_tracking(target_grid_number);
-        }
+    pwm_set_chan_level(slice_left, pwm_gpio_to_channel(L_MOTOR_ENA), pwm_l);
+    pwm_set_chan_level(slice_right, pwm_gpio_to_channel(R_MOTOR_ENB), pwm_r);
 
-        vTaskDelay(pdMS_TO_TICKS(500)); // Check every 500 ms
-    }
+    gpio_put(L_MOTOR_IN1, 0);  // Left motor forward
+    gpio_put(L_MOTOR_IN2, 1);
+    gpio_put(R_MOTOR_IN3, 0);  // Right motor forward
+    gpio_put(R_MOTOR_IN4, 1);
 
+    gpio_put(L_MOTOR_ENA, 1);  // Enable left motor
+    gpio_put(R_MOTOR_ENB, 1);  // Enable right motor
+
+    // Hardcoded delay to approximate distance
+    int delay_ms = distance * 27;  // Adjust multiplier based on testing
+    printf("Moving forward for %d ms to cover approximately %.2f cm.\n", delay_ms, distance);
+
+    sleep_ms(delay_ms);  // Wait for the calculated delay
+
+    // Stop the motors after the delay
+    stop_motor();
+    printf("Hard-coded distance reached. Stopping motor.\n");
 }

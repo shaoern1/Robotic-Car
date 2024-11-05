@@ -25,8 +25,9 @@ float prev_error_r = 0.0;
 
 float setpoint_speed = 15.0;
 
-volatile float pwm_l = 1900;
-volatile float pwm_r = 1900;
+volatile float pwm_l = 2800;
+volatile float pwm_r = 3150;
+
 
 // Function to initialize pins for motors
 void init_motor_setup()
