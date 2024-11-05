@@ -159,7 +159,7 @@ void turn_motor(int direction)
 {
     // pwm_set_chan_level(pwm_gpio_to_slice_num(L_MOTOR_ENA), pwm_gpio_to_channel(L_MOTOR_ENA), pwm);
     // pwm_set_chan_level(pwm_gpio_to_slice_num(R_MOTOR_ENB), pwm_gpio_to_channel(R_MOTOR_ENB), pwm);
-
+    printf("Turning motor\n");
     oscillation = 0;
 
     int target_notch_count = 190 * ENCODER_NOTCH / 360;
@@ -168,6 +168,7 @@ void turn_motor(int direction)
     // Motor to turn left
     if (direction == 0)
     {
+        printf("Turning left\n");
         // Reverse left wheel, forward right wheel
         gpio_put(L_MOTOR_IN1, 1);
         gpio_put(L_MOTOR_IN2, 0);
@@ -181,6 +182,7 @@ void turn_motor(int direction)
     // Motor to turn right
     else
     {
+        printf("Turning right\n");
         // Reverse right wheel, forward left wheel
         gpio_put(L_MOTOR_IN1, 0);
         gpio_put(L_MOTOR_IN2, 1);

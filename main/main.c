@@ -8,194 +8,165 @@
 #include "ultrasonic.h"
 
 #define BUTTON_PIN 21      // GPIO pin connected to the button
-#define TARGET_GRIDS 90    // Target distance in centimeters
+
+typedef enum {
+    IDLE = 0,
+    Ultrasonic10cm,
+    Turn90Degrees,
+    Travel90cm
+} RobotState;
 
 // Function prototypes
-void button_task(void *param);
-void distance_monitor_task(void *param);
-void ultrasonic_distance_task(void *param);
-void init_interrtupt();
+void init_interrupt();
 void ihandler(uint gpio, uint32_t events);
+void turn_right_90();
+void move_forward_cm(float distance);
+void change_state(); // Ensure this matches the definition
+
+// Global variables
+RobotState current_state = IDLE;
+kalman_state *ultrasonic_state;
+
 int main()
 {
-    // Initialize standard I/O
+    // Initialize standard I/O  
     stdio_init_all();
-    cyw43_arch_init();
-
-    // Initialize interrupt
-    init_interrtupt();
-    
-    // Initialize encoders
-    init_encoder_setup();
-   
-    // Initialize motors
     init_motor_setup();
     init_motor_pwm();
+    init_encoder_setup();
+    ultrasonic_init();
+    ultrasonic_state = kalman_init(1, 100, 1, 0);
     
-    // Initialize Ultrasonic Sensor
-    ultrasonic_init(); //why this will cause my distance_monitor_task to not work
-    kalman_state *state = kalman_init(1, 100, 1, 0); // Adjusted p from 0 to 1 for better Kalman performance
+    // Initialize interrupt
+    init_interrupt();
     
     // Initialize Button GPIO
     gpio_init(BUTTON_PIN);
     gpio_set_dir(BUTTON_PIN, GPIO_IN);
     gpio_pull_up(BUTTON_PIN);  // Use pull-up resistor
-
-    // Create Button Handling Task
-    BaseType_t button_result = xTaskCreate(
-        button_task,            // Task function
-        "ButtonTask",           // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        2,                      // Priority
-        NULL                    // Task handle
-    );
-
-    if (button_result != pdPASS) {
-        printf("Failed to create ButtonTask.\n");
+    
+    printf("Press the button to start.\n");
+    
+    // Wait for button press (active low)
+    while (gpio_get(BUTTON_PIN)) {
+        sleep_ms(100);
     }
-
-    // Create Distance Monitor Task
-    BaseType_t distance_result = xTaskCreate(
-        distance_monitor_task,  // Task function
-        "DistanceMonitor",      // Task name
-        1024,                   // Stack size (in words)
-        NULL,                   // Task parameters
-        1,                      // Priority
-        NULL                    // Task handle
-    );
-     
-    if (distance_result != pdPASS) {
-        printf("Failed to create DistanceMonitor.\n");
-    }
-
-    // Create Ultrasonic Sensor Task
-    BaseType_t ultrasonic_result = xTaskCreate(
-    ultrasonic_distance_task,    // Task function
-    "UltrasonicDistance",        // Task name
-    1024,                        // Stack size (in words)
-    (void *)state,               // Task parameter
-    1,                           // Task priority
-    NULL                         // Task handle
-    );
-
-    if (ultrasonic_result != pdPASS) {
-    printf("Failed to create UltrasonicDistance task.\n");
-    }
-
-    // Start the FreeRTOS scheduler
-    vTaskStartScheduler();
-
-    // Should never reach here
-    while (1) {
-        tight_loop_contents();
-    }
-
-    return 0;
-}
-
-/**
- * @brief Task to handle button presses on GPIO 21.
- *        Starts motor movement when button is pressed.
- */
-void button_task(void *param)
-{
-    (void)param;
-    static bool previous_state = true;
-    bool current_state;
-
-    while (1) {
-        current_state = gpio_get(BUTTON_PIN);
-
-        // Detect falling edge (button press)
-        if (current_state == false && previous_state == true) {
-            printf("Button pressed. Starting motor.\n");
-
-            // Start tracking TARGET_GRIDS
-            start_tracking(TARGET_GRIDS);
-
-            // Move forward TARGET_GRIDS
-            move_grids(TARGET_GRIDS);
-        }
-
-        previous_state = current_state;
-
-        vTaskDelay(pdMS_TO_TICKS(50)); // Debounce delay
-    }
-}
-
-/**
- * @brief Task to monitor the distance traveled using encoders.
- *        Stops the motor once the target distance is reached.
- */
-void distance_monitor_task(void *param)
-{
-    (void)param;
-
-    while (1) {
-        // Get the number of grids moved
-        uint32_t grids_moved = get_grids_moved(false);
-        printf("Grids moved: %d\n", grids_moved);
-        
-        // Check if movement is complete
-        if (complete_movement) {
-            printf("Target distance reached. Stopping motor.\n");
-            stop_motor();
-            break;
-            
-            // Optionally, reset tracking for next operation
-            start_tracking(TARGET_GRIDS);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(500)); // Check every 500 ms
-    }
-
-    // Delete the task after completion
-    vTaskDelete(NULL);
-} 
-
-void ultrasonic_distance_task(void *param)
-{
-    kalman_state *state = (kalman_state *)param;
-    double distance;
-
+    
+    printf("Button pressed. Starting program.\n");
+    current_state = Ultrasonic10cm;
+    
     while (1)
     {
-        move_motor(pwm_l, pwm_r);
-        distance = ultrasonic_get_distance(state);
-        printf("Current distance: %.2f cm\n", distance);
-        if(distance < 10){
-            printf("Obstacle detected\n");
-            stop_motor();
-            sleep_ms(1000);
-
-            break;
-        }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Print every 1 second
+        change_state();
+        sleep_ms(50);
     }
-
-    // Delete the task if needed
-    vTaskDelete(NULL);
 }
 
-// init interrupt for encoder and ultrasonic sensor
-void init_interrtupt(){
-    
+void change_state(){
+    printf("Current state: %d\n", current_state);
+    switch (current_state)
+    {   
+        case IDLE:
+        {
+            printf("IDLE\n");
+            stop_motor();
+            break;
+        }
+        case Ultrasonic10cm:
+        {
+            double distance = ultrasonic_get_distance(ultrasonic_state);
+            printf("Distance: %.2lf cm\n", distance);
+            if (distance > 10.0)
+            {
+                move_motor(pwm_l, pwm_r); // Move forward
+            }
+            else
+            {
+                printf("Obstacle detected. Stopping motor.\n");
+                stop_motor();
+                current_state = Turn90Degrees;
+            }
+            break;
+        }
+        case Turn90Degrees:
+        {
+            printf("Turning 90 degrees\n");
+            turn_right_90();
+            current_state = Travel90cm;
+            break;
+        }
+        case Travel90cm:
+        {
+            printf("Traveling 90 cm\n");
+            move_forward_cm(90.0); // Move forward 90 cm
+            current_state = Ultrasonic10cm;
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+// Initialize interrupt for encoder and ultrasonic sensor
+void init_interrupt(){
     gpio_set_irq_enabled_with_callback(L_ENCODER_OUT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
     gpio_set_irq_enabled_with_callback(R_ENCODER_OUT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
     gpio_set_irq_enabled_with_callback(ECHO_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &ihandler);
+    gpio_set_irq_enabled_with_callback(BUTTON_PIN, GPIO_IRQ_EDGE_FALL, true, &ihandler);
 }
 
 void ihandler(uint gpio, uint32_t events){
-
-// encoder interrupt handler
+    if (gpio == BUTTON_PIN)
+    {
+        if (current_state == IDLE)
+            current_state = Ultrasonic10cm;         
+        else if (current_state == Ultrasonic10cm)
+            current_state = Turn90Degrees;
+        else if (current_state == Turn90Degrees)
+            current_state = Travel90cm;
+    }
+    // Encoder interrupt handler
     if (gpio == L_ENCODER_OUT || gpio == R_ENCODER_OUT){
         encoder_pulse(gpio, events);
     }
-// ultrasonic sensor interrupt handler
+    // Ultrasonic sensor interrupt handler
     else if (gpio == ECHO_PIN){
         echo_pulse_handler(gpio, events);
     }
- 
+}
+
+// Function to turn right 90 degrees
+void turn_right_90()
+{
+
+    // Set PWM for turning
+    pwm_l = 3125;
+    pwm_r = 3125;
+    turn_motor(1);
+
+    // Wait for turn to complete (adjust delay as needed)
+    sleep_ms(500);
+
+    stop_motor();
+}
+
+// Function to move forward a specific distance in cm
+void move_forward_cm(float distance)
+{
+    printf("Moving forward %.2f cm\n", distance);
+    start_tracking(distance / 14.0); // Assuming 14 cm per grid
+    // If the distance is 90 the car wil move 6 grids and once it met the car will stop motor
+    while (!complete_movement)
+    {
+        printf("Moving forward\n");
+        move_motor(pwm_l, pwm_r);
+        sleep_ms(50);
+        if (TARGET_DISTANCE_CM == distance)
+        {
+            stop_motor();
+        }
+    }
+    printf("Target distance of %.2f cm reached. Stopping motor.\n", distance);
+    stop_motor();
 
 }

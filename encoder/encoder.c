@@ -75,7 +75,7 @@ void encoder_pulse(uint gpio, uint32_t events)
     oscillation++;
 }
 
-#define TARGET_DISTANCE_CM 90.0  // Define target distance in centimeters
+
 
 // Function to interrupt every second
 bool encoder_callback()
@@ -92,6 +92,12 @@ bool encoder_callback()
         complete_movement = true;
         stop_motor();
         printf("Target distance of %.2f cm reached. Stopping motor.\n", TARGET_DISTANCE_CM);
+    }
+    else if (get_grids_moved(false) >= target_grid_number)
+    {
+        complete_movement = true;
+        stop_motor();
+        printf("Target grids of %d reached. Stopping motor.\n", target_grid_number);
     }
 
     return true;
